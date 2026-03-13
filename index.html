@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR E-Book Portal | Immersive Education</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@200;300;400&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Bioluminescent Luxury Palette */
+            --bg-deep: #080908; 
+            --liquid-emerald: #105942;
+            --liquid-gold: #c5a059;
+            --liquid-sage: #6b806b;
+            --text-cream: #f4f0ea;
+            --text-sand: #d5c5b4;
+            
+            /* High-End Glass */
+            --glass-bg: rgba(244, 240, 234, 0.03);
+            --glass-border: rgba(197, 160, 89, 0.2); 
+            --glass-highlight: rgba(197, 160, 89, 0.4);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-cream);
+            overflow-x: hidden;
+            position: relative;
+            font-weight: 200;
+        }
+
+        /* --- VIBRANT LIQUID BACKGROUND --- */
+        .ambient-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -2; overflow: hidden; pointer-events: none;
+        }
+        .liquid-blob {
+            position: absolute; filter: blur(100px); opacity: 0.7;
+            animation: fluid-morph 18s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+        .blob-1 { width: 55vw; height: 55vw; background: var(--liquid-emerald); top: -15%; left: -10%; }
+        .blob-2 { width: 50vw; height: 50vw; background: var(--liquid-gold); bottom: -10%; right: -10%; animation-delay: -6s; opacity: 0.5; }
+        .blob-3 { width: 40vw; height: 40vw; background: var(--liquid-sage); top: 30%; left: 35%; animation-delay: -12s; opacity: 0.6; }
+
+        @keyframes fluid-morph {
+            0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; transform: translate(4vw, 6vh) scale(1.1) rotate(10deg); }
+            100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(-4vw, 8vh) scale(0.95) rotate(-10deg); }
+        }
+
+        /* --- LUXURY TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 400; margin: 0; }
+        
+        .cursive-accent {
+            font-family: 'Pinyon Script', cursive;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--liquid-gold);
+            margin-bottom: -15px; 
+            position: relative; z-index: 2;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 6vw, 4.8rem);
+            line-height: 1.1; letter-spacing: 1px; text-transform: uppercase;
+            background: linear-gradient(180deg, var(--text-cream) 0%, var(--text-sand) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 25px; position: relative; z-index: 1;
+        }
+
+        h2 { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4.5vw, 3.2rem); 
+            color: var(--text-cream); 
+            margin-bottom: 15px; letter-spacing: 1px; 
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase;
+            color: var(--liquid-gold); margin-bottom: 15px; display: block;
+        }
+        
+        p { 
+            font-size: clamp(0.95rem, 1.5vw, 1.05rem); 
+            line-height: 2; color: var(--text-sand); 
+            margin: 0 0 20px 0; font-weight: 300; letter-spacing: 0.5px;
+        }
+        
+        strong { color: var(--text-cream); font-weight: 400; }
+
+        .institution { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem; color: var(--liquid-sage); 
+            font-style: italic; letter-spacing: 1px; 
+            margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; 
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+
+        /* --- FROSTED GLASS CARDS --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid var(--glass-highlight); 
+            border-bottom: 1px solid rgba(0,0,0,0.5);
+            border-radius: 20px; 
+            padding: clamp(40px, 6vw, 70px);
+            margin: clamp(60px, 12vw, 120px) 0;
+            display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 8vw, 80px);
+            align-items: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 20px 40px rgba(255,255,255,0.02);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+        }
+        .glass-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 var(--glass-highlight); 
+            border-color: var(--glass-border); 
+        }
+        .glass-card.reverse { flex-direction: row-reverse; }
+        
+        /* --- TARGET IMAGES & AR FRAMES --- */
+        .image-wrapper {
+            position: relative;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.3);
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .image-wrapper::before, .image-wrapper::after {
+            content: ''; position: absolute; width: 30px; height: 30px; border-color: var(--liquid-gold); border-style: solid; opacity: 0.5; transition: all 0.4s ease;
+        }
+        .image-wrapper::before { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+        .image-wrapper::after { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+        .glass-card:hover .image-wrapper::before, .glass-card:hover .image-wrapper::after { width: calc(100% - 20px); height: calc(100% - 20px); opacity: 0.15; }
+
+        .target-image {
+            width: 100%; height: auto;
+            border-radius: 6px; display: block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+            filter: contrast(1.1) brightness(0.9);
+        }
+        .glass-card:hover .target-image { transform: scale(1.02); filter: contrast(1.1) brightness(1.1); }
+
+        /* --- MAGNETIC LIQUID BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 16px 45px; margin-top: 20px;
+            background: transparent;
+            border: 1px solid var(--liquid-gold); color: var(--liquid-gold);
+            text-decoration: none; border-radius: 50px; 
+            font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer;
+            position: relative; overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--liquid-gold);
+            z-index: -1; transform: scaleY(0); transform-origin: bottom; transition: transform 0.4s ease;
+        }
+        .btn:hover { color: var(--bg-deep); border-color: var(--liquid-gold); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.2); }
+        .btn:hover::before { transform: scaleY(1); }
+
+        /* --- QR SECTION --- */
+        .qr-section { text-align: center; padding: clamp(80px, 12vw, 150px) 0; border-top: 1px solid rgba(255,255,255,0.05); }
+        .qr-wrapper {
+            background: rgba(255,255,255,0.9); display: inline-block; padding: 20px; border-radius: 12px;
+            margin: 40px 0; transition: transform 0.5s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(197, 160, 89, 0.15);
+        }
+        .qr-wrapper:hover { transform: scale(1.05); }
+        .qr-code { width: clamp(160px, 30vw, 200px); display: block; border-radius: 4px; }
+
+        /* --- CINEMATIC REVEAL --- */
+        .reveal { opacity: 0; filter: blur(15px); transform: translateY(40px); transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+
+        @media (max-width: 900px) {
+            .glass-card { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+            .image-wrapper { order: -1; margin-bottom: 10px; }
+            .liquid-blob { animation: none; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-bg">
+        <div class="liquid-blob blob-1"></div>
+        <div class="liquid-blob blob-2"></div>
+        <div class="liquid-blob blob-3"></div>
+    </div>
+
+    <section class="hero container">
+        <div class="cursive-accent reveal">Immersive Education</div>
+        
+        <h1 class="reveal delay-1">Design and Development<br>of E-Book Using Augmented Reality</h1>
+        
+        <p class="reveal delay-2" style="max-width: 750px;">
+            Augmented Reality (AR) is transforming modern education by introducing immersive and interactive learning experiences. Unlike traditional e-books that depend mainly on static text and images, AR-based e-books enhance learning by integrating interactive 3D models, animations, and simulations.
+        </p>
+
+        <p class="reveal delay-2 institution">
+            P. R. Pote Patil College of Engineering and Management, Amravati, India
+        </p>
+        
+        <a href="#modules" class="btn reveal delay-2" style="margin-top: 30px;">Initialize System</a>
+    </section>
+
+    <div id="modules">
+        
+        <section class="container">
+            <div class="glass-card reveal">
+                
+                <div class="image-wrapper">
+                    <img src="titration_3d.png" alt="Acid-Base Titration Marker" class="target-image">
+                </div>
+
+                <div class="content">
+                    <span class="subtitle">Simulation 01</span>
+                    <h2>Acid-Base Titration</h2>
+                    <p>
+                        Acid-Base titration is a fundamental quantitative chemical analysis used to determine the exact concentration of an acidic or basic solution. 
+                    </p>
+                    <p>
+                        In our simulation, observe a Strong Acid and Strong Base reaction. As <strong>Sodium Hydroxide (NaOH)</strong> drops into <strong>Hydrochloric Acid (HCl)</strong>, the reaction pushes towards neutralization. At the <strong>Equivalence Point</strong> (pH 7.0), the indicator triggers a rapid chemical shift, turning the clear liquid vibrant pink.
+                    </p>
+                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--liquid-gold); margin-top: 15px;">
+                        Scan target image using the AR camera to initiate reaction.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="glass-card reverse reveal">
+                
+                <div class="image-wrapper">
+                    <img src="solar_system.jpg" alt="Solar System Marker" class="target-image">
+                </div>
+
+                <div class="content">
+                    <span class="subtitle">Simulation 02</span>
+                    <h2>The Solar System</h2>
+                    <p>
+                        Our Solar System comprises a central star—the Sun—and all the celestial bodies gravitationally bound to its immense mass, including the inner rocky terrestrial planets and the massive outer gas giants.
+                    </p>
+                    <p>
+                        Through this module, you can visualize the vast cosmic scale, differing rotational speeds, and complex elliptical paths of the planets directly in your physical space, allowing you to intuitively grasp the physics of gravity and orbital motion.
+                    </p>
+                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--liquid-gold); margin-top: 15px;">
+                        Scan target image using the AR camera to summon the galaxy.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <section class="qr-section container reveal">
+        <div class="cursive-accent" style="font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 0;">Experience the Magic</div>
+        <h2>Enter AR Environment</h2>
+        <p style="max-width: 600px; margin: 0 auto; text-align: center;">
+            The system is built using WebAR technology, allowing users to view AR content directly in a web browser without needing to download any extra apps. Scan the secure code below with your mobile device to establish the connection.
+        </p>
+        
+        <div class="qr-wrapper reveal delay-1">
+            <img src="qr_code.png" alt="Scan to Launch AR" class="qr-code">
+        </div>
+        
+        <br>
+        <a href="https://adityabute.github.io/WebAR-Titration-/" class="btn magnetic-btn reveal delay-2" target="_blank">Launch Mobile Scanner</a>
+    </section>
+
+    <script>
+        // Cinematic Scroll Reveal
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>
