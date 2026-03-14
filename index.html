@@ -95,13 +95,12 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
         .hero { min-height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 
-        /* --- FROSTED GLASS CARDS (STACKED LAYOUT FOR MASSIVE IMAGES) --- */
+        /* --- FROSTED GLASS CARDS (STACKED LAYOUT) --- */
         .glass-card {
             background: var(--glass-bg); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
             border: 1px solid rgba(255,255,255,0.15); border-top: 1px solid var(--glass-highlight); border-bottom: 1px solid rgba(0,0,0,0.4);
             border-radius: 20px; padding: clamp(40px, 6vw, 70px); margin: 60px 0;
             
-            /* Changed to Single Column layout */
             display: flex; flex-direction: column; gap: 40px; align-items: center; text-align: center;
             
             box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 20px 40px rgba(255,255,255,0.05);
@@ -110,12 +109,14 @@
         .glass-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px rgba(0,0,0,0.7), inset 0 1px 0 var(--glass-highlight); border-color: var(--glass-highlight); }
         .glass-card.single-col { max-width: 1000px; margin: 60px auto; }
         
-        /* --- MASSIVE TARGET IMAGES & AR FRAMES --- */
+        /* --- PERFECTLY SIZED TARGET IMAGES & AR FRAMES --- */
         .image-wrapper { 
-            position: relative; padding: 25px; border-radius: 12px; background: rgba(0,0,0,0.3); 
+            position: relative; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.3); 
             box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 20px 40px rgba(0,0,0,0.4); 
             border: 1px solid rgba(255,255,255,0.1); 
-            width: 100%; max-width: 900px; /* Images span full width of container */
+            width: 100%; 
+            max-width: 600px; /* Reduced from 900px to fit beautifully on laptop screens */
+            margin: 0 auto; /* Keeps the image perfectly centered */
         }
         .image-wrapper::before, .image-wrapper::after { content: ''; position: absolute; width: 40px; height: 40px; border-color: var(--liquid-gold); border-style: solid; opacity: 0.6; transition: all 0.4s ease; }
         .image-wrapper::before { top: 15px; left: 15px; border-width: 2px 0 0 2px; }
@@ -139,7 +140,7 @@
         /* --- WHATSAPP TEAM GRID (CONTACT) --- */
         .team-grid { 
             display: grid; 
-            grid-template-columns: repeat(2, 1fr); /* Forces 2 columns initially */
+            grid-template-columns: repeat(2, 1fr); 
             gap: 30px; margin-top: 50px; justify-content: center;
         }
         
@@ -147,14 +148,14 @@
             background: rgba(0,0,0,0.3); padding: 30px 20px; border-radius: 16px; 
             border: 1px solid rgba(255,255,255,0.1); text-align: center; 
             transition: transform 0.3s ease, border-color 0.3s, background 0.3s;
-            text-decoration: none; /* Required for links */
-            display: block; /* Make the whole card clickable */
+            text-decoration: none; 
+            display: block; 
         }
-        .team-member:hover { transform: translateY(-5px); border-color: #25D366; background: rgba(37, 211, 102, 0.1); /* Subtle WhatsApp Green hover */ box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2); }
+        .team-member:hover { transform: translateY(-5px); border-color: #25D366; background: rgba(37, 211, 102, 0.1); box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2); }
         .team-member h3 { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; color: var(--text-cream); margin-bottom: 10px; font-weight: 600; letter-spacing: 1px; text-transform: none; }
         .team-member p { font-family: 'Montserrat', sans-serif; font-size: 1.05rem; color: var(--liquid-gold); margin: 0; letter-spacing: 2px; font-weight: 500; }
         
-        /* Forces Janhvi (the 5th item) to perfectly center span the bottom row */
+        /* Forces Janhvi perfectly centered spanning the bottom row */
         .team-member.centered-bottom {
             grid-column: 1 / -1; 
             max-width: 400px;
@@ -364,16 +365,12 @@
     </footer>
 
     <script>
-        // --- PAGE SWITCHING LOGIC (SPA) ---
         function switchPage(pageId) {
-            // Hide all pages
             document.querySelectorAll('.page-section').forEach(page => {
                 page.classList.remove('active');
             });
-            // Show target page
             document.getElementById(pageId).classList.add('active');
             
-            // Update Navbar Active State
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
@@ -381,17 +378,11 @@
             if(event && event.currentTarget.classList.contains('nav-item')) {
                 event.currentTarget.classList.add('active');
             } else {
-                // If triggered by a button instead of nav, manually highlight nav
                 document.querySelector(`.nav-item[onclick="switchPage('${pageId}')"]`).classList.add('active');
             }
 
-            // Close mobile menu if open
             document.getElementById('nav-links').classList.remove('show');
-            
-            // Scroll to top instantly
             window.scrollTo(0, 0);
-            
-            // Re-trigger reveal animations for the new page
             setTimeout(triggerReveals, 50);
         }
 
@@ -399,7 +390,6 @@
             document.getElementById('nav-links').classList.toggle('show');
         }
 
-        // --- SCROLL REVEAL LOGIC ---
         function triggerReveals() {
             const reveals = document.querySelectorAll('.page-section.active .reveal');
             reveals.forEach((el) => {
@@ -413,7 +403,6 @@
         window.addEventListener('scroll', triggerReveals);
         window.addEventListener('load', triggerReveals);
 
-        // --- MOBILE LAUNCH BUTTON LOGIC ---
         const launchBtn = document.getElementById('mobile-launch-btn');
         const desktopAlert = document.getElementById('desktop-alert');
 
