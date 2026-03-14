@@ -83,8 +83,23 @@
         h1, h2, h3 { font-weight: 600; margin: 0; } 
         .cursive-accent { font-family: 'Pinyon Script', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: var(--liquid-gold); margin-bottom: -10px; position: relative; z-index: 2; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         
-        /* Adjusted H1 to guarantee 2-3 lines: slightly reduced max clamp size */
-        h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5.5vw, 4.5rem); line-height: 1.15; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 0%, var(--text-sand) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; position: relative; z-index: 1; max-width: 900px; margin-left: auto; margin-right: auto; }
+        /* Adjusted H1 to guarantee a beautiful 2-line layout without awkward breaks */
+        h1 { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: clamp(2rem, 4.5vw, 4.2rem); 
+            line-height: 1.2; 
+            letter-spacing: 1.5px; 
+            text-transform: uppercase; 
+            background: linear-gradient(180deg, #ffffff 0%, var(--text-sand) 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin-bottom: 25px; 
+            position: relative; 
+            z-index: 1; 
+            width: 100%; /* Allows text to stretch fully */
+            margin-left: auto; 
+            margin-right: auto; 
+        }
         
         h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--text-cream); margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; }
         .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--liquid-gold); margin-bottom: 15px; display: block; }
@@ -92,7 +107,6 @@
         p { font-size: clamp(1.05rem, 1.8vw, 1.2rem); line-height: 1.9; color: var(--text-sand); margin: 0 0 25px 0; font-weight: 400; letter-spacing: 0.5px; }
         strong { color: #ffffff; font-weight: 600; }
         
-        /* Improved Clarity for College Name: Changed to Gold, removed italics, added shadow */
         .institution { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--liquid-gold); font-style: normal; font-weight: 600; letter-spacing: 1px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
@@ -116,7 +130,7 @@
             box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 20px 40px rgba(0,0,0,0.4); 
             border: 1px solid rgba(255,255,255,0.1); 
             width: 100%; 
-            max-width: 600px; /* Perfect laptop size */
+            max-width: 600px; 
             margin: 0 auto; 
         }
         .image-wrapper::before, .image-wrapper::after { content: ''; position: absolute; width: 40px; height: 40px; border-color: var(--liquid-gold); border-style: solid; opacity: 0.6; transition: all 0.4s ease; }
@@ -221,7 +235,7 @@
     <section id="home" class="page-section active">
         <div class="hero container">
             <div class="cursive-accent reveal">Immersive Education</div>
-            <h1 class="reveal delay-1">Design and Development of E-Book<br>Using Augmented Reality</h1>
+            <h1 class="reveal delay-1">Design and Development of E-Books<br>Using Augmented Reality</h1>
             <p class="reveal delay-2" style="max-width: 750px;">
                 Step into the future of education. Transform static pages into interactive, 3D holographic experiences directly from your web browser.
             </p>
@@ -298,7 +312,7 @@
             </div>
             
             <div class="cursive-accent" style="text-align: center; font-size: clamp(3rem, 6vw, 4.5rem); margin-top: 100px;">
-                And many more models yet to come.....
+                And many more models yet to come...
             </div>
         </div>
 
