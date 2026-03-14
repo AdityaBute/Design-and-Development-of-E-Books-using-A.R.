@@ -16,8 +16,8 @@
             --liquid-emerald: #167a5a;
             --liquid-gold: #d4b476;
             --liquid-sage: #819981;
-            --text-cream: #ffffff; /* Brighter for readability */
-            --text-sand: #e8dbcb; /* Brighter for readability */
+            --text-cream: #ffffff; 
+            --text-sand: #e8dbcb; 
             
             /* Brighter High-End Glass */
             --glass-bg: rgba(244, 240, 234, 0.08); 
@@ -36,7 +36,7 @@
             color: var(--text-cream);
             overflow-x: hidden;
             position: relative;
-            font-weight: 400; /* Increased from 300 for readability */
+            font-weight: 400; 
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -79,44 +79,45 @@
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- LUXURY TYPOGRAPHY (READABILITY BOOSTED) --- */
-        h1, h2, h3 { font-weight: 600; margin: 0; } /* Increased from 400 */
+        /* --- LUXURY TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 600; margin: 0; } 
         .cursive-accent { font-family: 'Pinyon Script', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: var(--liquid-gold); margin-bottom: -10px; position: relative; z-index: 2; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.1; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 0%, var(--text-sand) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; position: relative; z-index: 1; }
+        
+        /* Adjusted H1 to guarantee 2-3 lines: slightly reduced max clamp size */
+        h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5.5vw, 4.5rem); line-height: 1.15; letter-spacing: 1px; text-transform: uppercase; background: linear-gradient(180deg, #ffffff 0%, var(--text-sand) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; position: relative; z-index: 1; max-width: 900px; margin-left: auto; margin-right: auto; }
+        
         h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--text-cream); margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; }
         .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--liquid-gold); margin-bottom: 15px; display: block; }
         
-        /* Body text is bolder and slightly larger */
         p { font-size: clamp(1.05rem, 1.8vw, 1.2rem); line-height: 1.9; color: var(--text-sand); margin: 0 0 25px 0; font-weight: 400; letter-spacing: 0.5px; }
         strong { color: #ffffff; font-weight: 600; }
         
-        .institution { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--liquid-sage); font-style: italic; font-weight: 600; letter-spacing: 1px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px; }
+        /* Improved Clarity for College Name: Changed to Gold, removed italics, added shadow */
+        .institution { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--liquid-gold); font-style: normal; font-weight: 600; letter-spacing: 1px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
         .hero { min-height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 
-        /* --- FROSTED GLASS CARDS (STACKED LAYOUT) --- */
+        /* --- FROSTED GLASS CARDS --- */
         .glass-card {
             background: var(--glass-bg); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
             border: 1px solid rgba(255,255,255,0.15); border-top: 1px solid var(--glass-highlight); border-bottom: 1px solid rgba(0,0,0,0.4);
             border-radius: 20px; padding: clamp(40px, 6vw, 70px); margin: 60px 0;
-            
             display: flex; flex-direction: column; gap: 40px; align-items: center; text-align: center;
-            
             box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 20px 40px rgba(255,255,255,0.05);
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
         }
         .glass-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px rgba(0,0,0,0.7), inset 0 1px 0 var(--glass-highlight); border-color: var(--glass-highlight); }
         .glass-card.single-col { max-width: 1000px; margin: 60px auto; }
         
-        /* --- PERFECTLY SIZED TARGET IMAGES & AR FRAMES --- */
+        /* --- PERFECTLY SIZED TARGET IMAGES --- */
         .image-wrapper { 
             position: relative; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.3); 
             box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 20px 40px rgba(0,0,0,0.4); 
             border: 1px solid rgba(255,255,255,0.1); 
             width: 100%; 
-            max-width: 600px; /* Reduced from 900px to fit beautifully on laptop screens */
-            margin: 0 auto; /* Keeps the image perfectly centered */
+            max-width: 600px; /* Perfect laptop size */
+            margin: 0 auto; 
         }
         .image-wrapper::before, .image-wrapper::after { content: ''; position: absolute; width: 40px; height: 40px; border-color: var(--liquid-gold); border-style: solid; opacity: 0.6; transition: all 0.4s ease; }
         .image-wrapper::before { top: 15px; left: 15px; border-width: 2px 0 0 2px; }
@@ -137,7 +138,7 @@
         .btn:hover { color: var(--bg-deep); border-color: var(--liquid-gold); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.4); }
         .btn:hover::before { transform: scaleY(1); }
 
-        /* --- WHATSAPP TEAM GRID (CONTACT) --- */
+        /* --- WHATSAPP TEAM GRID --- */
         .team-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
@@ -155,7 +156,6 @@
         .team-member h3 { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; color: var(--text-cream); margin-bottom: 10px; font-weight: 600; letter-spacing: 1px; text-transform: none; }
         .team-member p { font-family: 'Montserrat', sans-serif; font-size: 1.05rem; color: var(--liquid-gold); margin: 0; letter-spacing: 2px; font-weight: 500; }
         
-        /* Forces Janhvi perfectly centered spanning the bottom row */
         .team-member.centered-bottom {
             grid-column: 1 / -1; 
             max-width: 400px;
@@ -163,9 +163,7 @@
             width: 100%;
         }
 
-        .whatsapp-hint {
-            display: block; font-size: 0.8rem; color: #25D366; margin-top: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;
-        }
+        .whatsapp-hint { display: block; font-size: 0.8rem; color: #25D366; margin-top: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
 
         /* --- FOOTER --- */
         .footer { background: rgba(17, 21, 19, 0.9); border-top: 1px solid rgba(255,255,255,0.1); padding: 30px 20px; text-align: center; margin-top: auto; backdrop-filter: blur(10px); }
@@ -188,13 +186,10 @@
         .delay-2 { transition-delay: 0.2s; }
 
         @media (max-width: 900px) {
-            /* Mobile Nav */
             .menu-toggle { display: block; }
             .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--nav-bg); backdrop-filter: blur(20px); flex-direction: column; padding: 20px 0; text-align: center; border-bottom: 1px solid var(--glass-border); }
             .nav-links.show { display: flex; }
             .nav-links li { padding: 15px 0; }
-            
-            /* Team Grid mobile */
             .team-grid { grid-template-columns: 1fr; }
             .team-member.centered-bottom { grid-column: auto; max-width: 100%; }
         }
@@ -226,7 +221,7 @@
     <section id="home" class="page-section active">
         <div class="hero container">
             <div class="cursive-accent reveal">Immersive Education</div>
-            <h1 class="reveal delay-1">Design and Development<br>of E-Book Using Augmented Reality</h1>
+            <h1 class="reveal delay-1">Design and Development of E-Book<br>Using Augmented Reality</h1>
             <p class="reveal delay-2" style="max-width: 750px;">
                 Step into the future of education. Transform static pages into interactive, 3D holographic experiences directly from your web browser.
             </p>
