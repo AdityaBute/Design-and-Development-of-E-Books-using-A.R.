@@ -7,25 +7,34 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-deep: #111513; 
-            --liquid-emerald: #167a5a;
-            --liquid-gold: #d4b476;
-            --liquid-sage: #819981;
+            /* Brighter Luxury Bioluminescent Palette */
+            --bg-deep: #121814; /* Brighter deep slate/green */
+            --liquid-emerald: #14805c; /* Brighter emerald */
+            --liquid-gold: #e3be75; /* Brighter, richer gold */
+            --liquid-sage: #7a9c88; /* Brighter sage */
             --text-cream: #ffffff; 
-            --text-sand: #e8dbcb; 
+            --text-sand: #f0e6d2; /* Brighter sand text */
             
-            --glass-bg: rgba(244, 240, 234, 0.08); 
-            --glass-border: rgba(197, 160, 89, 0.3); 
-            --glass-highlight: rgba(197, 160, 89, 0.6);
-            --nav-bg: rgba(17, 21, 19, 0.85);
+            /* Brighter Premium Glass */
+            --glass-bg: rgba(30, 45, 38, 0.45); /* Lighter glass */
+            --glass-border: rgba(227, 190, 117, 0.25); 
+            --glass-glow: rgba(255, 255, 255, 0.08); 
+            --nav-bg: rgba(18, 24, 20, 0.85);
+            
+            --smooth-ease: cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--liquid-gold); }
 
         body {
             margin: 0; padding: 0;
@@ -38,184 +47,209 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* --- ORGANIC FLUID BACKGROUND --- */
         .ambient-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -2; overflow: hidden; pointer-events: none;
+            z-index: -3; overflow: hidden; pointer-events: none;
         }
         .liquid-blob {
-            position: absolute; filter: blur(90px); opacity: 0.85;
+            position: absolute; filter: blur(100px); opacity: 0.85; /* Increased opacity for brightness */
             border-radius: 50%; will-change: transform;
+            mix-blend-mode: screen; 
         }
-        .blob-1 { width: 55vw; height: 50vw; background: var(--liquid-emerald); top: -10%; left: -10%; animation: float-1 22s infinite alternate ease-in-out; }
-        .blob-2 { width: 50vw; height: 55vw; background: var(--liquid-gold); bottom: -10%; right: -10%; animation: float-2 25s infinite alternate ease-in-out; opacity: 0.65; }
-        .blob-3 { width: 45vw; height: 40vw; background: var(--liquid-sage); top: 25%; left: 30%; animation: float-3 20s infinite alternate ease-in-out; opacity: 0.75; }
+        .blob-1 { width: 60vw; height: 60vw; background: var(--liquid-emerald); top: -20%; left: -20%; animation: float-1 25s infinite alternate ease-in-out; }
+        .blob-2 { width: 50vw; height: 50vw; background: var(--liquid-gold); bottom: -10%; right: -10%; animation: float-2 28s infinite alternate ease-in-out; opacity: 0.45; }
+        .blob-3 { width: 40vw; height: 40vw; background: var(--liquid-sage); top: 30%; left: 40%; animation: float-3 22s infinite alternate ease-in-out; opacity: 0.55; }
 
-        @keyframes float-1 { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(6vw, 6vh, 0) scale(1.1); } }
-        @keyframes float-2 { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(-5vw, -8vh, 0) scale(1.15); } }
-        @keyframes float-3 { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(5vw, -5vh, 0) scale(0.95); } }
+        @keyframes float-1 { 0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); } 100% { transform: translate3d(8vw, 8vh, 0) scale(1.1) rotate(10deg); } }
+        @keyframes float-2 { 0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); } 100% { transform: translate3d(-6vw, -6vh, 0) scale(1.15) rotate(-10deg); } }
+        @keyframes float-3 { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(4vw, -4vh, 0) scale(0.9); } }
 
+        /* --- NAVBAR --- */
         .navbar {
             position: fixed; top: 0; left: 0; width: 100%;
-            background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
+            background: var(--nav-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(227, 190, 117, 0.15);
             z-index: 1000; padding: 15px 5%;
             display: flex; justify-content: space-between; align-items: center;
+            transition: padding 0.4s var(--smooth-ease), background 0.4s ease;
         }
-        .nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; color: var(--liquid-gold); letter-spacing: 1px; text-transform: uppercase; cursor: pointer; }
-        .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
-        .nav-links li { cursor: pointer; font-size: 0.95rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; color: var(--text-sand); }
-        .nav-links li:hover, .nav-links li.active { color: var(--liquid-gold); text-shadow: 0 0 10px rgba(197, 160, 89, 0.4); }
-
-        .menu-toggle { display: none; color: var(--liquid-gold); font-size: 1.5rem; cursor: pointer; }
-
-        .page-section { display: none; flex: 1; padding-top: 120px; padding-bottom: 50px; animation: fadeIn 0.6s ease forwards; }
-        .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        h1, h2, h3 { font-weight: 600; margin: 0; } 
-        .cursive-accent { font-family: 'Pinyon Script', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: var(--liquid-gold); margin-bottom: -10px; position: relative; z-index: 2; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .navbar.scrolled { padding: 10px 5%; background: rgba(18, 24, 20, 0.98); }
         
-        h1 { 
-            font-family: 'Cormorant Garamond', serif; 
-            font-size: clamp(2rem, 4.5vw, 4.2rem); 
-            line-height: 1.2; 
-            letter-spacing: 1.5px; 
-            text-transform: uppercase; 
-            background: linear-gradient(180deg, #ffffff 0%, var(--text-sand) 100%); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            margin-bottom: 25px; 
-            position: relative; 
-            z-index: 1; 
-            width: 100%; 
-            margin-left: auto; 
-            margin-right: auto; 
-        }
+        .nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; color: var(--liquid-gold); letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: transform 0.3s ease; }
+        .nav-brand:hover { transform: scale(1.05); }
         
-        h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); color: var(--text-cream); margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; }
-        .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--liquid-gold); margin-bottom: 15px; display: block; }
+        .nav-links { display: flex; gap: 35px; list-style: none; margin: 0; padding: 0; }
+        .nav-links li { cursor: pointer; font-size: 0.9rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; color: rgba(255,255,255,0.75); position: relative; }
+        .nav-links li::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 0%; height: 2px; background: var(--liquid-gold); transition: width 0.3s var(--smooth-ease); }
+        .nav-links li:hover, .nav-links li.active { color: var(--liquid-gold); }
+        .nav-links li.active::after { width: 100%; }
+
+        .menu-toggle { display: none; color: var(--liquid-gold); font-size: 1.5rem; cursor: pointer; transition: transform 0.3s ease; }
+
+        /* --- PAGE SECTIONS --- */
+        .page-section { 
+            display: none; flex: 1; padding-top: 140px; padding-bottom: 60px; 
+            opacity: 0; transform: translateY(30px); 
+            transition: opacity 0.5s ease, transform 0.6s var(--smooth-ease); 
+        }
+        .page-section.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-weight: 500; margin: 0; } 
         
-        p { font-size: clamp(1.05rem, 1.8vw, 1.2rem); line-height: 1.9; color: var(--text-sand); margin: 0 0 25px 0; font-weight: 400; letter-spacing: 0.5px; }
-        strong { color: #ffffff; font-weight: 600; }
-        
-        .institution { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--liquid-gold); font-style: normal; font-weight: 600; letter-spacing: 1px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 25px; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
-        .hero { min-height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-
-        .glass-card {
-            background: var(--glass-bg); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
-            border: 1px solid rgba(255,255,255,0.15); border-top: 1px solid var(--glass-highlight); border-bottom: 1px solid rgba(0,0,0,0.4);
-            border-radius: 20px; padding: clamp(40px, 6vw, 70px); margin: 60px 0;
-            display: flex; flex-direction: column; gap: 40px; align-items: center; text-align: center;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 20px 40px rgba(255,255,255,0.05);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
-        }
-        .glass-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px rgba(0,0,0,0.7), inset 0 1px 0 var(--glass-highlight); border-color: var(--glass-highlight); }
-        .glass-card.single-col { max-width: 1000px; margin: 60px auto; }
-        
-        .image-wrapper { 
-            position: relative; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.3); 
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 20px 40px rgba(0,0,0,0.4); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            width: 100%; 
-            max-width: 600px; 
-            margin: 0 auto; 
-        }
-        .image-wrapper::before, .image-wrapper::after { content: ''; position: absolute; width: 40px; height: 40px; border-color: var(--liquid-gold); border-style: solid; opacity: 0.6; transition: all 0.4s ease; }
-        .image-wrapper::before { top: 15px; left: 15px; border-width: 2px 0 0 2px; }
-        .image-wrapper::after { bottom: 15px; right: 15px; border-width: 0 2px 2px 0; }
-        .glass-card:hover .image-wrapper::before, .glass-card:hover .image-wrapper::after { width: calc(100% - 30px); height: calc(100% - 30px); opacity: 0.3; }
-
-        .target-image { width: 100%; height: auto; border-radius: 8px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease; filter: contrast(1.05) brightness(0.95); }
-        .glass-card:hover .target-image { transform: scale(1.01); filter: contrast(1.1) brightness(1.05); }
-
-        .btn {
-            display: inline-block; padding: 18px 50px; margin-top: 20px; background: transparent;
-            border: 2px solid var(--liquid-gold); color: var(--liquid-gold); text-decoration: none; border-radius: 50px; 
-            font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.95rem; letter-spacing: 3px; text-transform: uppercase;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .btn::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--liquid-gold); z-index: -1; transform: scaleY(0); transform-origin: bottom; transition: transform 0.4s ease; }
-        .btn:hover { color: var(--bg-deep); border-color: var(--liquid-gold); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.4); }
-        .btn:hover::before { transform: scaleY(1); }
-
-        .team-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 30px; margin-top: 40px; justify-content: center;
-        }
-        
-        .team-member { 
-            background: rgba(0,0,0,0.3); padding: 30px 20px; border-radius: 16px; 
-            border: 1px solid rgba(255,255,255,0.1); text-align: center; 
-            transition: transform 0.3s ease, border-color 0.3s, background 0.3s;
-            text-decoration: none; 
-            display: block; 
-        }
-        .team-member:hover { transform: translateY(-5px); border-color: #25D366; background: rgba(37, 211, 102, 0.1); box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2); }
-        .team-member h3 { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; color: var(--text-cream); margin-bottom: 10px; font-weight: 600; letter-spacing: 1px; text-transform: none; }
-        .team-member p { font-family: 'Montserrat', sans-serif; font-size: 1.05rem; color: var(--liquid-gold); margin: 0; letter-spacing: 2px; font-weight: 500; }
-        
-        .team-member.centered-bottom {
-            grid-column: 1 / -1; 
-            max-width: 400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .whatsapp-hint { display: block; font-size: 0.8rem; color: #25D366; margin-top: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
-
-        /* --- THE GUIDE CREDITS BADGE --- */
-        .guide-credit {
-            margin-top: 50px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-        .guide-label {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.6);
-        }
-        .guide-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            font-weight: 600;
+        /* The Cursive Overlays */
+        .cursive-accent {
+            font-family: 'Pinyon Script', cursive;
+            font-size: clamp(3rem, 6vw, 4.5rem);
             color: var(--liquid-gold);
-            text-shadow: 0 2px 15px rgba(197, 160, 89, 0.4);
+            margin-bottom: -5px; 
+            position: relative; z-index: 2;
+            text-shadow: 0 5px 20px rgba(227, 190, 117, 0.4);
+            text-transform: none; 
             letter-spacing: 1px;
         }
 
-        .footer { background: rgba(17, 21, 19, 0.9); border-top: 1px solid rgba(255,255,255,0.1); padding: 30px 20px; text-align: center; margin-top: auto; backdrop-filter: blur(10px); }
-        .footer p { margin: 5px 0; font-size: 0.95rem; font-weight: 400; letter-spacing: 1px; color: var(--text-sand); }
+        h1 { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-size: clamp(2.2rem, 5vw, 4.5rem); 
+            line-height: 1.15; letter-spacing: 1px; text-transform: uppercase; 
+            color: #ffffff;
+            margin-bottom: 25px; position: relative; z-index: 2; 
+            width: 100%; margin-left: auto; margin-right: auto; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.2rem); color: var(--liquid-gold); margin-bottom: 20px; letter-spacing: 0.5px; text-transform: uppercase; transform: translateZ(20px); }
+        
+        p { font-size: clamp(1rem, 1.5vw, 1.1rem); line-height: 1.8; color: var(--text-sand); margin: 0 0 25px 0; font-weight: 300; letter-spacing: 0.5px; transform: translateZ(10px); }
+        strong { color: #ffffff; font-weight: 500; }
+        
+        .institution { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: rgba(227, 190, 117, 0.8); font-weight: 500; letter-spacing: 2px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; text-transform: uppercase; transform: translateZ(10px); }
 
-        .qr-section { text-align: center; padding: 60px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; }
-        .qr-wrapper { background: rgba(255,255,255,0.95); display: inline-block; padding: 25px; border-radius: 16px; margin: 30px 0; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(197, 160, 89, 0.3); transition: transform 0.5s ease; }
-        .qr-wrapper:hover { transform: scale(1.05); }
-        .qr-code { width: clamp(160px, 30vw, 220px); display: block; border-radius: 6px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+        .hero { min-height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; perspective: 1500px; }
+        
+        /* Wrapper for 3D Hero Jiggle */
+        .hero-content {
+            position: relative; width: 100%;
+            transform-style: preserve-3d; transition: transform 0.2s ease-out;
+            display: flex; flex-direction: column; align-items: center;
+        }
 
-        .desktop-alert { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(100px); background: rgba(17, 21, 19, 0.95); backdrop-filter: blur(20px); border: 2px solid var(--liquid-gold); color: var(--text-cream); padding: 20px 40px; border-radius: 50px; font-size: 1rem; font-weight: 500; letter-spacing: 1px; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(197, 160, 89, 0.3); opacity: 0; visibility: hidden; transition: all 0.5s ease; z-index: 9999; text-align: center; width: max-content; max-width: 90vw; }
+        /* --- 3D TILT GLASS CARDS --- */
+        .tilt-card {
+            transform-style: preserve-3d; transition: transform 0.2s ease-out, border-color 0.5s ease, box-shadow 0.5s ease;
+            will-change: transform;
+        }
+
+        .glass-card {
+            background: var(--glass-bg); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 24px; padding: clamp(40px, 6vw, 70px); margin: 60px 0;
+            display: flex; flex-direction: column; gap: 40px; align-items: center; text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.1);
+        }
+        .glass-card:hover { border-color: rgba(227, 190, 117, 0.5); box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 40px rgba(227, 190, 117, 0.15); }
+        .glass-card.single-col { max-width: 900px; margin: 60px auto; }
+        
+        .glass-card > * { transform: translateZ(30px); }
+
+        /* --- 3D FLOATING IMAGES --- */
+        .image-wrapper { 
+            position: relative; padding: 15px; border-radius: 16px; background: rgba(0,0,0,0.4); 
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.5); 
+            border: 1px solid rgba(255,255,255,0.05); 
+            width: 100%; max-width: 600px; margin: 0 auto; 
+            transform: translateZ(40px); /* Pops image out of card */
+        }
+
+        .image-wrapper::before, .image-wrapper::after { content: ''; position: absolute; width: 30px; height: 30px; border-color: var(--liquid-gold); border-style: solid; opacity: 0.6; transition: all 0.5s var(--smooth-ease); border-radius: 4px; }
+        .image-wrapper::before { top: 15px; left: 15px; border-width: 2px 0 0 2px; }
+        .image-wrapper::after { bottom: 15px; right: 15px; border-width: 0 2px 2px 0; }
+        .glass-card:hover .image-wrapper::before, .glass-card:hover .image-wrapper::after { width: calc(100% - 30px); height: calc(100% - 30px); opacity: 0.25; }
+
+        .target-image { width: 100%; height: auto; border-radius: 8px; display: block; filter: contrast(1.05) brightness(0.95); transition: filter 0.5s ease; }
+        .glass-card:hover .target-image { filter: contrast(1.1) brightness(1.15); }
+
+        /* --- PREMIUM BUTTONS --- */
+        .btn {
+            display: inline-block; padding: 18px 50px; margin-top: 20px; background: transparent;
+            border: 1px solid var(--liquid-gold); color: var(--liquid-gold); text-decoration: none; border-radius: 100px; 
+            font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase;
+            transition: all 0.4s var(--smooth-ease); cursor: pointer; position: relative; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateZ(30px);
+        }
+        .btn::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--liquid-gold); z-index: -1; transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--smooth-ease); }
+        .btn:hover { color: var(--bg-deep); box-shadow: 0 15px 30px rgba(227, 190, 117, 0.3); border-color: transparent; }
+        .btn:hover::before { transform: scaleX(1); }
+
+        /* --- SLEEK TEAM GRID --- */
+        .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 50px; justify-content: center; width: 100%; }
+        
+        .team-member { 
+            background: rgba(0,0,0,0.3); padding: 30px 20px; border-radius: 16px; 
+            border: 1px solid rgba(255,255,255,0.08); text-align: center; 
+            transition: all 0.4s var(--smooth-ease); text-decoration: none; display: block; 
+            position: relative; overflow: hidden;
+        }
+        .team-member::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(37, 211, 102, 0.15) 0%, transparent 70%); opacity: 0; transition: opacity 0.4s ease; pointer-events: none; }
+        .team-member:hover { border-color: #25D366; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .team-member:hover::before { opacity: 1; }
+        .team-member > * { transform: translateZ(20px); pointer-events: none; } 
+        
+        .team-member h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: #ffffff; margin-bottom: 8px; font-weight: 500; text-transform: none; }
+        .team-member p { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin: 0; letter-spacing: 2px; }
+        .team-member.centered-bottom { grid-column: 1 / -1; max-width: 400px; margin: 0 auto; width: 100%; }
+        .whatsapp-hint { display: block; font-size: 0.75rem; color: #25D366; margin-top: 15px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; transition: transform 0.3s ease; }
+        .team-member:hover .whatsapp-hint { transform: translateY(-2px); }
+
+        /* --- THE GUIDE CREDITS --- */
+        .guide-credit { margin-top: 50px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; transform: translateZ(20px); }
+        .guide-label { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 500; }
+        .guide-name { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 500; color: var(--liquid-gold); }
+
+        /* --- FOOTER --- */
+        .footer { background: rgba(18, 24, 20, 0.9); border-top: 1px solid rgba(255,255,255,0.05); padding: 30px 20px; text-align: center; margin-top: auto; backdrop-filter: blur(10px); }
+        .footer p { margin: 5px 0; font-size: 0.85rem; font-weight: 400; letter-spacing: 2px; color: rgba(255,255,255,0.6); text-transform: uppercase; }
+
+        /* --- QR SECTION --- */
+        .qr-section { text-align: center; padding: 60px 0; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px; perspective: 1000px; }
+        .qr-wrapper { background: #ffffff; display: inline-block; padding: 25px; border-radius: 16px; margin: 30px 0; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 40px rgba(227, 190, 117, 0.2); border: 1px solid rgba(255,255,255,0.2); transition: transform 0.5s var(--smooth-ease); }
+        .qr-wrapper:hover { transform: scale(1.05) rotate(2deg); }
+        .qr-code { width: clamp(160px, 30vw, 220px); display: block; border-radius: 4px; transform: translateZ(20px); }
+
+        /* --- MOBILE DESKTOP ALERT --- */
+        .desktop-alert { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(100px); background: rgba(18, 24, 20, 0.95); backdrop-filter: blur(20px); border: 1px solid var(--liquid-gold); color: #fff; padding: 18px 35px; border-radius: 50px; font-size: 0.9rem; font-weight: 500; letter-spacing: 1px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); opacity: 0; visibility: hidden; transition: all 0.6s var(--smooth-ease); z-index: 9999; text-align: center; width: max-content; max-width: 90vw; }
         .desktop-alert.show { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
 
-        .reveal { opacity: 0; filter: blur(15px); transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
+        /* --- SCROLL REVEAL (Mobile & Desktop) --- */
+        .reveal { opacity: 0; transform: translateY(40px) scale(0.98); transition: opacity 0.8s ease, transform 0.8s var(--smooth-ease); will-change: opacity, transform; }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
         .delay-1 { transition-delay: 0.1s; }
         .delay-2 { transition-delay: 0.2s; }
 
         @media (max-width: 900px) {
             .menu-toggle { display: block; }
-            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: var(--nav-bg); backdrop-filter: blur(20px); flex-direction: column; padding: 20px 0; text-align: center; border-bottom: 1px solid var(--glass-border); }
-            .nav-links.show { display: flex; }
-            .nav-links li { padding: 15px 0; }
+            .nav-links { 
+                display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; 
+                background: rgba(18, 24, 20, 0.98); backdrop-filter: blur(30px); padding: 0; text-align: center; 
+                border-bottom: 1px solid rgba(255,255,255,0.05); 
+                max-height: 0; overflow: hidden; transition: max-height 0.5s var(--smooth-ease), padding 0.5s ease; 
+            }
+            .nav-links.show { max-height: 400px; padding: 20px 0; }
+            .nav-links li { padding: 15px 0; opacity: 0; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s ease; }
+            .nav-links.show li { opacity: 1; transform: translateY(0); }
+            .nav-links.show li:nth-child(1) { transition-delay: 0.1s; }
+            .nav-links.show li:nth-child(2) { transition-delay: 0.15s; }
+            .nav-links.show li:nth-child(3) { transition-delay: 0.2s; }
+            .nav-links.show li:nth-child(4) { transition-delay: 0.25s; }
+            
             .team-grid { grid-template-columns: 1fr; }
             .team-member.centered-bottom { grid-column: auto; max-width: 100%; }
         }
@@ -229,44 +263,51 @@
         <div class="liquid-blob blob-3"></div>
     </div>
 
-    <nav class="navbar">
-        <div class="nav-brand" onclick="switchPage('home')">AR E-Book</div>
-        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand" onclick="switchPage('home')">EduAR</div>
+        <div class="menu-toggle" onclick="toggleMenu()" id="menu-icon">☰</div>
         <ul class="nav-links" id="nav-links">
             <li class="nav-item active" onclick="switchPage('home')">Home</li>
             <li class="nav-item" onclick="switchPage('about')">About</li>
-            <li class="nav-item" onclick="switchPage('simulations')">AR Simulations</li>
+            <li class="nav-item" onclick="switchPage('simulations')">Simulations</li>
             <li class="nav-item" onclick="switchPage('contact')">Contact</li>
         </ul>
     </nav>
 
     <div id="desktop-alert" class="desktop-alert">
-        ⚠️ This scanner is optimized for mobile devices. Please scan the QR code!
+        ⚠️ Scanner optimized for mobile devices. Please scan the QR code!
     </div>
 
     <section id="home" class="page-section active">
         <div class="hero container">
-            <div class="cursive-accent reveal">Immersive Education</div>
-            <h1 class="reveal delay-1">Design and Development of E-Books<br>Using Augmented Reality</h1>
-            <p class="reveal delay-2" style="max-width: 750px;">
-                Step into the future of education. Transform static pages into interactive, 3D holographic experiences directly from your web browser.
-            </p>
-            <a onclick="switchPage('simulations')" class="btn reveal delay-2" style="margin-top: 20px;">View Simulations</a>
+            <div class="hero-content tilt-card">
+                
+                <div class="cursive-accent reveal" style="transform: translateZ(40px);">Immersive Education</div>
+                
+                <h1 class="reveal delay-1" style="transform: translateZ(50px);">Design and Development of E-Books<br>Using Augmented Reality</h1>
+                
+                <p class="reveal delay-2" style="max-width: 700px; transform: translateZ(30px);">
+                    Step into the future of education. Transform static pages into interactive, 3D holographic experiences directly from your web browser.
+                </p>
+                <div style="transform: translateZ(60px);">
+                    <a onclick="switchPage('simulations')" class="btn reveal delay-2">View Simulations</a>
+                </div>
+            </div>
         </div>
     </section>
 
     <section id="about" class="page-section">
         <div class="container">
-            <div class="glass-card single-col reveal">
-                <div class="cursive-accent">Project Vision</div>
-                <h2>The Future of Textbooks</h2>
-                <p>
+            <div class="glass-card single-col tilt-card reveal">
+                <div class="cursive-accent" style="transform: translateZ(30px);">Project Vision</div>
+                <h2 style="transform: translateZ(25px);">The Future of Textbooks</h2>
+                <p style="transform: translateZ(10px);">
                     Augmented Reality (AR) is fundamentally transforming modern education by introducing immersive, interactive learning experiences. Historically, students have relied on traditional e-books and physical texts that are confined to static, two-dimensional images and paragraphs. Our AR-based e-book shatters these limitations by seamlessly integrating interactive 3D models, active animations, and live scientific simulations directly onto the physical page.
                 </p>
-                <p>
+                <p style="transform: translateZ(10px);">
                     By employing <strong>Marker-Based Tracking</strong>, the system recognizes specific printed images—such as a titration apparatus or the solar system—and superimposes dynamic, computer-generated graphics over them in real-time. This spatial computing approach allows learners to visualize complex, abstract scientific concepts (like orbital mechanics or chemical neutralization) with a level of depth and interactivity that a standard textbook simply cannot provide.
                 </p>
-                <p>
+                <p style="transform: translateZ(10px);">
                     Crucially, this project was engineered using <strong>WebAR technology</strong>. This bridges the gap between physical materials and digital intelligence without requiring users to download heavy, dedicated applications or invest in expensive AR hardware. By simply scanning a target image with a standard smartphone camera, high-fidelity 3D assets are rendered directly in the mobile browser, making advanced educational technology highly accessible, scalable, and instantly deployable.
                 </p>
                 <p class="institution">P. R. Pote Patil College of Engineering and Management, Amravati, India</p>
@@ -277,10 +318,10 @@
     <section id="simulations" class="page-section">
         
         <div class="container">
-            <div class="glass-card reveal">
+            <div class="glass-card tilt-card reveal">
                 
-                <div class="content">
-                    <span class="subtitle">Simulation 01</span>
+                <div class="content" style="transform: translateZ(30px);">
+                    <div class="cursive-accent">Simulation 01</div>
                     <h2>Acid-Base Titration</h2>
                     <p>
                         Acid-Base titration is a fundamental quantitative chemical analysis used to determine the exact concentration of an acidic or basic solution. 
@@ -288,7 +329,7 @@
                     <p>
                         In our simulation, observe a Strong Acid and Strong Base reaction. As <strong>Sodium Hydroxide (NaOH)</strong> drops into <strong>Hydrochloric Acid (HCl)</strong>, the reaction pushes towards neutralization. At the <strong>Equivalence Point</strong> (pH 7.0), the indicator triggers a rapid chemical shift, turning the clear liquid vibrant pink.
                     </p>
-                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; color: var(--liquid-gold); margin-top: 15px; font-size: 1.3rem;">
+                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; color: var(--liquid-gold); margin-top: 15px; font-size: 1.3rem; text-transform: none;">
                         Scan the target image below using the AR camera to initiate reaction.
                     </p>
                 </div>
@@ -301,10 +342,10 @@
         </div>
 
         <div class="container">
-            <div class="glass-card reveal">
+            <div class="glass-card tilt-card reveal">
                 
-                <div class="content">
-                    <span class="subtitle">Simulation 02</span>
+                <div class="content" style="transform: translateZ(30px);">
+                    <div class="cursive-accent">Simulation 02</div>
                     <h2>The Solar System</h2>
                     <p>
                         Our Solar System comprises a central star—the Sun—and all the celestial bodies gravitationally bound to its immense mass, including the inner rocky terrestrial planets and the massive outer gas giants.
@@ -312,7 +353,7 @@
                     <p>
                         Through this module, you can visualize the vast cosmic scale, differing rotational speeds, and complex elliptical paths of the planets directly in your physical space, allowing you to intuitively grasp the physics of gravity and orbital motion.
                     </p>
-                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 600; color: var(--liquid-gold); margin-top: 15px; font-size: 1.3rem;">
+                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; color: var(--liquid-gold); margin-top: 15px; font-size: 1.3rem; text-transform: none;">
                         Scan the target image below using the AR camera to summon the galaxy.
                     </p>
                 </div>
@@ -323,54 +364,54 @@
 
             </div>
             
-            <div class="cursive-accent" style="text-align: center; font-size: clamp(3rem, 6vw, 4.5rem); margin-top: 100px;">
-                And many more models yet to come...
+            <div style="text-align: center; margin-top: 80px;">
+                <div class="cursive-accent" style="color: rgba(227, 190, 117, 0.6); font-size: clamp(2rem, 4vw, 3rem);">More models pending deployment...</div>
             </div>
         </div>
 
         <div class="qr-section container reveal">
-            <div class="cursive-accent" style="font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 0;">Deploy Scanner</div>
-            <h2>Enter AR Environment</h2>
-            <p style="max-width: 700px; margin: 0 auto; text-align: center;">
+            <div class="cursive-accent" style="font-size: clamp(2.5rem, 5vw, 3.5rem); transform: translateZ(20px);">Deploy Scanner</div>
+            <h2 style="transform: translateZ(15px);">Enter AR Environment</h2>
+            <p style="max-width: 600px; margin: 0 auto; text-align: center; transform: translateZ(10px);">
                 Scan the secure code below with your mobile device, or click the launch button if you are already on a smartphone.
             </p>
-            <div class="qr-wrapper reveal delay-1">
+            <div class="qr-wrapper tilt-card reveal delay-1">
                 <img src="qr_code.png" alt="Scan to Launch AR" class="qr-code">
             </div>
             <br>
-            <a href="#" id="mobile-launch-btn" class="btn reveal delay-2">Launch Mobile Scanner</a>
+            <a href="#" id="mobile-launch-btn" class="btn tilt-card reveal delay-2">Launch Mobile Scanner</a>
         </div>
     </section>
 
     <section id="contact" class="page-section">
         <div class="container">
-            <div class="glass-card single-col reveal" style="max-width: 900px;">
-                <div class="cursive-accent">The Team</div>
-                <h2>Project Developers</h2>
-                <p>Tap any developer below to connect directly via WhatsApp.</p>
+            <div class="glass-card single-col tilt-card reveal" style="max-width: 900px;">
+                <div class="cursive-accent" style="transform: translateZ(30px);">The Team</div>
+                <h2 style="transform: translateZ(25px);">Project Developers</h2>
+                <p style="transform: translateZ(20px);">Tap any developer below to connect directly via WhatsApp.</p>
                 
                 <div class="team-grid">
-                    <a href="https://wa.me/917020783332" target="_blank" class="team-member">
+                    <a href="https://wa.me/917020783332" target="_blank" class="team-member tilt-card">
                         <h3>Aditya N. Bute</h3>
                         <p>7020783332</p>
                         <span class="whatsapp-hint">Chat on WhatsApp</span>
                     </a>
-                    <a href="https://wa.me/918669658551" target="_blank" class="team-member">
+                    <a href="https://wa.me/918669658551" target="_blank" class="team-member tilt-card">
                         <h3>Sarthak V. Sonone</h3>
                         <p>8669658551</p>
                         <span class="whatsapp-hint">Chat on WhatsApp</span>
                     </a>
-                    <a href="https://wa.me/919503742318" target="_blank" class="team-member">
+                    <a href="https://wa.me/919503742318" target="_blank" class="team-member tilt-card">
                         <h3>Chinmayee S. Ninawe</h3>
                         <p>9503742318</p>
                         <span class="whatsapp-hint">Chat on WhatsApp</span>
                     </a>
-                    <a href="https://wa.me/919960452940" target="_blank" class="team-member">
+                    <a href="https://wa.me/919960452940" target="_blank" class="team-member tilt-card">
                         <h3>Rushikesh N. Dhenge</h3>
                         <p>9960452940</p>
                         <span class="whatsapp-hint">Chat on WhatsApp</span>
                     </a>
-                    <a href="https://wa.me/917821859508" target="_blank" class="team-member centered-bottom">
+                    <a href="https://wa.me/917821859508" target="_blank" class="team-member tilt-card centered-bottom">
                         <h3>Janhvi S. Ghadekar</h3>
                         <p>7821859508</p>
                         <span class="whatsapp-hint">Chat on WhatsApp</span>
@@ -392,35 +433,83 @@
     </footer>
 
     <script>
+        // --- BUTTERY SMOOTH PAGE TRANSITIONS ---
+        let isTransitioning = false;
+
         function switchPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
+            if (isTransitioning) return;
+            const activePage = document.querySelector('.page-section.active');
+            if (activePage && activePage.id === pageId) return; 
             
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            isTransitioning = true;
             
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             if(event && event.currentTarget.classList.contains('nav-item')) {
                 event.currentTarget.classList.add('active');
             } else {
-                document.querySelector(`.nav-item[onclick="switchPage('${pageId}')"]`).classList.add('active');
+                const targetNav = document.querySelector(`.nav-item[onclick="switchPage('${pageId}')"]`);
+                if(targetNav) targetNav.classList.add('active');
             }
 
-            document.getElementById('nav-links').classList.remove('show');
-            window.scrollTo(0, 0);
-            setTimeout(triggerReveals, 50);
+            const navLinks = document.getElementById('nav-links');
+            const menuIcon = document.getElementById('menu-icon');
+            if (navLinks.classList.contains('show')) {
+                navLinks.classList.remove('show');
+                menuIcon.style.transform = 'rotate(0deg)';
+            }
+
+            if (activePage) {
+                activePage.style.opacity = '0';
+                activePage.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    activePage.classList.remove('active');
+                    activePage.style.opacity = ''; 
+                    activePage.style.transform = '';
+                    showNewPage(pageId);
+                }, 400); 
+            } else {
+                showNewPage(pageId);
+            }
+        }
+
+        function showNewPage(pageId) {
+            const newPage = document.getElementById(pageId);
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            newPage.classList.add('active');
+            
+            setTimeout(() => {
+                triggerReveals();
+                isTransitioning = false;
+            }, 50);
         }
 
         function toggleMenu() {
-            document.getElementById('nav-links').classList.toggle('show');
+            const navLinks = document.getElementById('nav-links');
+            const menuIcon = document.getElementById('menu-icon');
+            navLinks.classList.toggle('show');
+            
+            if (navLinks.classList.contains('show')) {
+                menuIcon.style.transform = 'rotate(90deg)';
+            } else {
+                menuIcon.style.transform = 'rotate(0deg)';
+            }
         }
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
 
         function triggerReveals() {
             const reveals = document.querySelectorAll('.page-section.active .reveal');
+            const windowHeight = window.innerHeight;
+            
             reveals.forEach((el) => {
-                const windowHeight = window.innerHeight;
                 const elementTop = el.getBoundingClientRect().top;
                 if (elementTop < windowHeight - 50) {
                     el.classList.add('active');
@@ -429,6 +518,64 @@
         }
         window.addEventListener('scroll', triggerReveals);
         window.addEventListener('load', triggerReveals);
+
+        // --- 3D JIGGLE TILT PHYSICS (Mouse + Mobile Gyroscope) ---
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        
+        // Desktop Mouse Tracking
+        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -5; 
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
+        } 
+        // Mobile Gyroscope Tracking
+        else {
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', (e) => {
+                    if (e.beta === null || e.gamma === null) return;
+                    
+                    let xTilt = Math.max(-15, Math.min(15, e.beta - 45)); 
+                    let yTilt = Math.max(-15, Math.min(15, e.gamma));
+                    
+                    const rotateX = xTilt * -0.5; 
+                    const rotateY = yTilt * 0.5;
+
+                    tiltCards.forEach(card => {
+                        const rect = card.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom > 0) {
+                            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
+                            card.style.transition = `transform 0.1s ease-out`;
+                        }
+                    });
+                });
+            }
+
+            let gyroGranted = false;
+            document.body.addEventListener('click', () => {
+                if (!gyroGranted && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    DeviceOrientationEvent.requestPermission()
+                        .then(permissionState => {
+                            if (permissionState === 'granted') gyroGranted = true;
+                        })
+                        .catch(console.error);
+                }
+            }, { once: true });
+        }
 
         const launchBtn = document.getElementById('mobile-launch-btn');
         const desktopAlert = document.getElementById('desktop-alert');
