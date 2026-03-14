@@ -11,7 +11,6 @@
 
     <style>
         :root {
-            /* Brighter Bioluminescent Luxury Palette */
             --bg-deep: #111513; 
             --liquid-emerald: #167a5a;
             --liquid-gold: #d4b476;
@@ -19,7 +18,6 @@
             --text-cream: #ffffff; 
             --text-sand: #e8dbcb; 
             
-            /* Brighter High-End Glass */
             --glass-bg: rgba(244, 240, 234, 0.08); 
             --glass-border: rgba(197, 160, 89, 0.3); 
             --glass-highlight: rgba(197, 160, 89, 0.6);
@@ -42,7 +40,6 @@
             min-height: 100vh;
         }
 
-        /* --- VIBRANT LIQUID BACKGROUND --- */
         .ambient-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -2; overflow: hidden; pointer-events: none;
@@ -59,7 +56,6 @@
         @keyframes float-2 { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(-5vw, -8vh, 0) scale(1.15); } }
         @keyframes float-3 { 0% { transform: translate3d(0, 0, 0) scale(1); } 100% { transform: translate3d(5vw, -5vh, 0) scale(0.95); } }
 
-        /* --- NAVBAR --- */
         .navbar {
             position: fixed; top: 0; left: 0; width: 100%;
             background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -74,16 +70,13 @@
 
         .menu-toggle { display: none; color: var(--liquid-gold); font-size: 1.5rem; cursor: pointer; }
 
-        /* --- PAGE SECTIONS --- */
         .page-section { display: none; flex: 1; padding-top: 120px; padding-bottom: 50px; animation: fadeIn 0.6s ease forwards; }
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- LUXURY TYPOGRAPHY --- */
         h1, h2, h3 { font-weight: 600; margin: 0; } 
         .cursive-accent { font-family: 'Pinyon Script', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: var(--liquid-gold); margin-bottom: -10px; position: relative; z-index: 2; text-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         
-        /* Adjusted H1 to guarantee a beautiful 2-line layout without awkward breaks */
         h1 { 
             font-family: 'Cormorant Garamond', serif; 
             font-size: clamp(2rem, 4.5vw, 4.2rem); 
@@ -96,7 +89,7 @@
             margin-bottom: 25px; 
             position: relative; 
             z-index: 1; 
-            width: 100%; /* Allows text to stretch fully */
+            width: 100%; 
             margin-left: auto; 
             margin-right: auto; 
         }
@@ -112,7 +105,6 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
         .hero { min-height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 
-        /* --- FROSTED GLASS CARDS --- */
         .glass-card {
             background: var(--glass-bg); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
             border: 1px solid rgba(255,255,255,0.15); border-top: 1px solid var(--glass-highlight); border-bottom: 1px solid rgba(0,0,0,0.4);
@@ -124,7 +116,6 @@
         .glass-card:hover { transform: translateY(-8px); box-shadow: 0 40px 80px rgba(0,0,0,0.7), inset 0 1px 0 var(--glass-highlight); border-color: var(--glass-highlight); }
         .glass-card.single-col { max-width: 1000px; margin: 60px auto; }
         
-        /* --- PERFECTLY SIZED TARGET IMAGES --- */
         .image-wrapper { 
             position: relative; padding: 20px; border-radius: 12px; background: rgba(0,0,0,0.3); 
             box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 20px 40px rgba(0,0,0,0.4); 
@@ -141,7 +132,6 @@
         .target-image { width: 100%; height: auto; border-radius: 8px; display: block; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease; filter: contrast(1.05) brightness(0.95); }
         .glass-card:hover .target-image { transform: scale(1.01); filter: contrast(1.1) brightness(1.05); }
 
-        /* --- MAGNETIC LIQUID BUTTONS --- */
         .btn {
             display: inline-block; padding: 18px 50px; margin-top: 20px; background: transparent;
             border: 2px solid var(--liquid-gold); color: var(--liquid-gold); text-decoration: none; border-radius: 50px; 
@@ -152,11 +142,10 @@
         .btn:hover { color: var(--bg-deep); border-color: var(--liquid-gold); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.4); }
         .btn:hover::before { transform: scaleY(1); }
 
-        /* --- WHATSAPP TEAM GRID --- */
         .team-grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
-            gap: 30px; margin-top: 50px; justify-content: center;
+            gap: 30px; margin-top: 40px; justify-content: center;
         }
         
         .team-member { 
@@ -179,21 +168,44 @@
 
         .whatsapp-hint { display: block; font-size: 0.8rem; color: #25D366; margin-top: 10px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
 
-        /* --- FOOTER --- */
+        /* --- THE GUIDE CREDITS BADGE --- */
+        .guide-credit {
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .guide-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+        }
+        .guide-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--liquid-gold);
+            text-shadow: 0 2px 15px rgba(197, 160, 89, 0.4);
+            letter-spacing: 1px;
+        }
+
         .footer { background: rgba(17, 21, 19, 0.9); border-top: 1px solid rgba(255,255,255,0.1); padding: 30px 20px; text-align: center; margin-top: auto; backdrop-filter: blur(10px); }
         .footer p { margin: 5px 0; font-size: 0.95rem; font-weight: 400; letter-spacing: 1px; color: var(--text-sand); }
 
-        /* --- QR SECTION --- */
         .qr-section { text-align: center; padding: 60px 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; }
         .qr-wrapper { background: rgba(255,255,255,0.95); display: inline-block; padding: 25px; border-radius: 16px; margin: 30px 0; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 40px rgba(197, 160, 89, 0.3); transition: transform 0.5s ease; }
         .qr-wrapper:hover { transform: scale(1.05); }
         .qr-code { width: clamp(160px, 30vw, 220px); display: block; border-radius: 6px; }
 
-        /* --- MOBILE DESKTOP ALERT --- */
         .desktop-alert { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(100px); background: rgba(17, 21, 19, 0.95); backdrop-filter: blur(20px); border: 2px solid var(--liquid-gold); color: var(--text-cream); padding: 20px 40px; border-radius: 50px; font-size: 1rem; font-weight: 500; letter-spacing: 1px; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(197, 160, 89, 0.3); opacity: 0; visibility: hidden; transition: all 0.5s ease; z-index: 9999; text-align: center; width: max-content; max-width: 90vw; }
         .desktop-alert.show { transform: translateX(-50%) translateY(0); opacity: 1; visibility: visible; }
 
-        /* --- CINEMATIC REVEAL --- */
         .reveal { opacity: 0; filter: blur(15px); transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
         .delay-1 { transition-delay: 0.1s; }
@@ -364,6 +376,12 @@
                         <span class="whatsapp-hint">Chat on WhatsApp</span>
                     </a>
                 </div>
+
+                <div class="guide-credit reveal delay-1">
+                    <span class="guide-label">Under the Guidance of</span>
+                    <span class="guide-name">Dr. P. M. Jawandhiya</span>
+                </div>
+
             </div>
         </div>
     </section>
