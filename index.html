@@ -47,11 +47,10 @@
         }
         .liquid-blob {
             position: absolute; filter: blur(90px); opacity: 0.65;
-            border-radius: 50%; /* Static shape to stop CPU lag */
-            will-change: transform; /* Forces GPU rendering */
+            border-radius: 50%;
+            will-change: transform; 
         }
         
-        /* Using asymmetric width/height instead of animating border-radius */
         .blob-1 { width: 60vw; height: 45vw; background: var(--liquid-emerald); top: -10%; left: -15%; animation: float-1 20s infinite alternate ease-in-out; }
         .blob-2 { width: 45vw; height: 55vw; background: var(--liquid-gold); bottom: -15%; right: -10%; animation: float-2 25s infinite alternate ease-in-out; opacity: 0.45; }
         .blob-3 { width: 50vw; height: 40vw; background: var(--liquid-sage); top: 20%; left: 30%; animation: float-3 22s infinite alternate ease-in-out; opacity: 0.5; }
@@ -128,7 +127,6 @@
             background: var(--glass-bg);
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             
-            /* Glossy Glass Edges */
             border-top: 1px solid var(--glass-border-light); 
             border-left: 1px solid rgba(255, 255, 255, 0.1);
             border-right: 1px solid var(--glass-border-dark);
@@ -138,7 +136,6 @@
             padding: clamp(30px, 5vw, 60px);
             margin: clamp(60px, 10vw, 100px) 0;
             
-            /* ASYMMETRICAL GRID: Images are now much larger (1.4fr vs 1fr) */
             display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(40px, 6vw, 80px);
             align-items: center;
             
@@ -146,7 +143,6 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
         }
         
-        /* Reverses the layout so text and image alternate perfectly */
         .glass-card.reverse { grid-template-columns: 1fr 1.4fr; }
         
         .glass-card:hover { 
@@ -163,7 +159,7 @@
             box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 20px 50px rgba(0,0,0,0.5);
             border-top: 1px solid rgba(255,255,255,0.1);
             border-bottom: 1px solid rgba(0,0,0,0.8);
-            width: 100%; /* Ensures it fills the new larger grid column */
+            width: 100%; 
         }
         
         .image-wrapper::before, .image-wrapper::after {
@@ -233,6 +229,36 @@
         .qr-wrapper:hover { transform: scale(1.05); }
         .qr-code { width: clamp(160px, 30vw, 220px); display: block; border-radius: 4px; }
 
+        /* --- CUSTOM DESKTOP ALERT POPUP --- */
+        .desktop-alert {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(8, 9, 8, 0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--liquid-gold);
+            color: var(--text-cream);
+            padding: 18px 35px;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 30px rgba(197, 160, 89, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 9999;
+            text-align: center;
+            width: max-content;
+            max-width: 90vw;
+        }
+        .desktop-alert.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* --- CINEMATIC REVEAL --- */
         .reveal { opacity: 0; filter: blur(15px); transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
         .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
@@ -252,6 +278,10 @@
         <div class="liquid-blob blob-1"></div>
         <div class="liquid-blob blob-2"></div>
         <div class="liquid-blob blob-3"></div>
+    </div>
+
+    <div id="desktop-alert" class="desktop-alert">
+        ⚠️ This scanner is optimized for mobile devices. Please scan the QR code above!
     </div>
 
     <section class="hero container">
@@ -338,7 +368,7 @@
         </div>
         
         <br>
-        <a href="https://adityabute.github.io/WebAR-Titration-/" class="btn magnetic-btn reveal delay-2" target="_blank">Launch Mobile Scanner</a>
+        <a href="#" id="mobile-launch-btn" class="btn reveal delay-2">Launch Mobile Scanner</a>
     </section>
 
     <script>
@@ -353,6 +383,30 @@
         }, observerOptions);
 
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // DEVICE DETECTION LOGIC
+        const launchBtn = document.getElementById('mobile-launch-btn');
+        const desktopAlert = document.getElementById('desktop-alert');
+
+        launchBtn.addEventListener('click', function(e) {
+            e.preventDefault(); // Stop the button from jumping to the top of the page
+            
+            // Check the browser's userAgent to see if it's a mobile phone/tablet
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // If they are on a phone, open the scanner link in a new tab
+                window.open("https://adityabute.github.io/WebAR-Titration-/", "_blank");
+            } else {
+                // If they are on a laptop/desktop, show the glowing custom toast notification
+                desktopAlert.classList.add('show');
+                
+                // Automatically hide the notification after 4 seconds
+                setTimeout(() => {
+                    desktopAlert.classList.remove('show');
+                }, 4000);
+            }
+        });
     </script>
 </body>
 </html>
