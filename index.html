@@ -101,6 +101,7 @@
         /* --- TYPOGRAPHY --- */
         h1, h2, h3 { font-weight: 500; margin: 0; } 
         
+        /* The Cursive Overlays */
         .cursive-accent {
             font-family: 'Pinyon Script', cursive;
             font-size: clamp(3rem, 6vw, 4.5rem);
@@ -132,6 +133,7 @@
         .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
         .hero { min-height: calc(100vh - 100px); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; perspective: 1500px; }
         
+        /* Wrapper for 3D Hero Jiggle */
         .hero-content {
             position: relative; width: 100%;
             transform-style: preserve-3d; transition: transform 0.2s ease-out;
@@ -163,7 +165,7 @@
             box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.5); 
             border: 1px solid rgba(255,255,255,0.05); 
             width: 100%; max-width: 600px; margin: 0 auto; 
-            transform: translateZ(40px);
+            transform: translateZ(40px); /* Pops image out of card */
         }
 
         .image-wrapper::before, .image-wrapper::after { content: ''; position: absolute; width: 30px; height: 30px; border-color: var(--liquid-gold); border-style: solid; opacity: 0.6; transition: all 0.5s var(--smooth-ease); border-radius: 4px; }
@@ -187,7 +189,7 @@
         .btn:hover { color: var(--bg-deep); box-shadow: 0 15px 30px rgba(227, 190, 117, 0.3); border-color: transparent; }
         .btn:hover::before { transform: scaleX(1); }
 
-        /* --- COMPACT QR CARD (Minimalist UX Fix) --- */
+        /* --- COMPACT QR CARD --- */
         .compact-qr-card {
             flex-direction: row;
             justify-content: space-between;
@@ -248,6 +250,9 @@
         .delay-1 { transition-delay: 0.1s; }
         .delay-2 { transition-delay: 0.2s; }
 
+        /* ==========================================
+           MOBILE OPTIMIZATIONS (FIXES)
+           ========================================== */
         @media (max-width: 900px) {
             .menu-toggle { display: block; }
             .nav-links { 
@@ -263,6 +268,13 @@
             .nav-links.show li:nth-child(2) { transition-delay: 0.15s; }
             .nav-links.show li:nth-child(3) { transition-delay: 0.2s; }
             .nav-links.show li:nth-child(4) { transition-delay: 0.25s; }
+            
+            /* Team Grid Fix: Forces 1 column on mobile */
+            .team-grid { grid-template-columns: 1fr; }
+            .team-member.centered-bottom { grid-column: auto; max-width: 100%; }
+            
+            /* Button Resize Fix: Sleeker buttons for mobile */
+            .btn { padding: 14px 35px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -292,8 +304,11 @@
     <section id="home" class="page-section active">
         <div class="hero container">
             <div class="hero-content tilt-card">
+                
                 <div class="cursive-accent reveal" style="transform: translateZ(40px);">Immersive Education</div>
+                
                 <h1 class="reveal delay-1" style="transform: translateZ(50px);">Design and Development of E-Books<br>Using Augmented Reality</h1>
+                
                 <p class="reveal delay-2" style="max-width: 700px; transform: translateZ(30px);">
                     Step into the future of education. Transform static pages into interactive, 3D holographic experiences directly from your web browser.
                 </p>
@@ -333,7 +348,7 @@
                     <p style="font-size: 0.95rem; margin-bottom: 15px; max-width: 450px;">
                         Scan the code or click below to activate your mobile camera, then point it at the simulation targets.
                     </p>
-                    <a href="#" id="mobile-launch-btn" class="btn" style="padding: 12px 30px; font-size: 0.8rem; margin-top: 0; box-shadow: none;">Open AR Camera</a>
+                    <a href="#" id="mobile-launch-btn" class="btn" style="margin-top: 0; box-shadow: none;">Open AR Camera</a>
                 </div>
                 <div class="qr-wrapper-small" style="transform: translateZ(20px);">
                     <img src="qr_code.png" alt="Scan to Launch AR" class="qr-code-small">
