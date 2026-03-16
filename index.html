@@ -12,15 +12,15 @@
     <style>
         :root {
             /* Brighter Luxury Bioluminescent Palette */
-            --bg-deep: #121814; /* Brighter deep slate/green */
-            --liquid-emerald: #14805c; /* Brighter emerald */
-            --liquid-gold: #e3be75; /* Brighter, richer gold */
-            --liquid-sage: #7a9c88; /* Brighter sage */
+            --bg-deep: #121814; 
+            --liquid-emerald: #14805c; 
+            --liquid-gold: #e3be75; 
+            --liquid-sage: #7a9c88; 
             --text-cream: #ffffff; 
-            --text-sand: #f0e6d2; /* Brighter sand text */
+            --text-sand: #f0e6d2; 
             
             /* Brighter Premium Glass */
-            --glass-bg: rgba(30, 45, 38, 0.45); /* Lighter glass */
+            --glass-bg: rgba(30, 45, 38, 0.45); 
             --glass-border: rgba(227, 190, 117, 0.25); 
             --glass-glow: rgba(255, 255, 255, 0.08); 
             --nav-bg: rgba(18, 24, 20, 0.85);
@@ -56,7 +56,7 @@
             z-index: -3; overflow: hidden; pointer-events: none;
         }
         .liquid-blob {
-            position: absolute; filter: blur(100px); opacity: 0.85; /* Increased opacity for brightness */
+            position: absolute; filter: blur(100px); opacity: 0.85; 
             border-radius: 50%; will-change: transform;
             mix-blend-mode: screen; 
         }
@@ -319,7 +319,6 @@
         
         <div class="container">
             <div class="glass-card tilt-card reveal">
-                
                 <div class="content" style="transform: translateZ(30px);">
                     <div class="cursive-accent">Simulation 01</div>
                     <h2>Acid-Base Titration</h2>
@@ -333,17 +332,14 @@
                         Scan the target image below using the AR camera to initiate reaction.
                     </p>
                 </div>
-
                 <div class="image-wrapper">
                     <img src="titration_3d.jpeg" alt="Acid-Base Titration Marker" class="target-image">
                 </div>
-
             </div>
         </div>
 
         <div class="container">
             <div class="glass-card tilt-card reveal">
-                
                 <div class="content" style="transform: translateZ(30px);">
                     <div class="cursive-accent">Simulation 02</div>
                     <h2>The Solar System</h2>
@@ -357,15 +353,51 @@
                         Scan the target image below using the AR camera to summon the galaxy.
                     </p>
                 </div>
-
                 <div class="image-wrapper">
                     <img src="solar_system.jpg" alt="Solar System Marker" class="target-image">
                 </div>
-
             </div>
-            
-            <div style="text-align: center; margin-top: 80px;">
-                <div class="cursive-accent" style="color: rgba(227, 190, 117, 0.6); font-size: clamp(2rem, 4vw, 3rem);">More models pending deployment...</div>
+        </div>
+
+        <div class="container">
+            <div class="glass-card tilt-card reveal">
+                <div class="content" style="transform: translateZ(30px);">
+                    <div class="cursive-accent">Simulation 03</div>
+                    <h2>Human Anatomy</h2>
+                    <p>
+                        Understanding complex biological systems requires deep spatial visualization. Traditional 2D textbook diagrams often fail to convey the depth and inter-connectivity of human organs.
+                    </p>
+                    <p>
+                        Through this dynamic module, you possess a fully interactive biological interface. Upon scanning, select from distinct anatomical systems (Angiology, Muscular, Splanchnology) to project high-fidelity, rotating 3D physiological models directly onto your workspace.
+                    </p>
+                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; color: var(--liquid-gold); margin-top: 15px; font-size: 1.3rem; text-transform: none;">
+                        Scan the target image below using the AR camera to initialize the biological interface.
+                    </p>
+                </div>
+                <div class="image-wrapper">
+                    <img src="human_3d.jpg" alt="Human Anatomy Marker" class="target-image">
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="glass-card tilt-card reveal">
+                <div class="content" style="transform: translateZ(30px);">
+                    <div class="cursive-accent">Simulation 04</div>
+                    <h2>Botany & Plant Anatomy</h2>
+                    <p>
+                        Delve into the microscopic and macroscopic structures of plant biology. This module dissects the intricate layers of a flower, allowing for a comprehensive study of reproduction and cellular arrangement.
+                    </p>
+                    <p>
+                        Visualize the stamen, pistil, and petal formations in full 3D space. By interacting with this model, students can bridge the gap between theoretical botany and practical, volumetric observation.
+                    </p>
+                    <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; color: var(--liquid-gold); margin-top: 15px; font-size: 1.3rem; text-transform: none;">
+                        Scan the target image below using the AR camera to examine the flora.
+                    </p>
+                </div>
+                <div class="image-wrapper">
+                    <img src="flower_3d.jpg" alt="Flower Anatomy Marker" class="target-image">
+                </div>
             </div>
         </div>
 
