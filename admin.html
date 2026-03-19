@@ -53,9 +53,8 @@
     </div>
 
     <script>
-        // Your Exact Firebase Configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyBtMiaiLqdLZy_K9pqy1mpgGFzIXbX7IEE",
+            apiKey: "AIzaSyBtMiaIlQdLzY_K9pqy1mpgGFzIXbX7IEE",
             authDomain: "eduar-7425d.firebaseapp.com",
             projectId: "eduar-7425d",
             storageBucket: "eduar-7425d.firebasestorage.app",
@@ -71,16 +70,12 @@
         // 🚨 UPGRADED SECURITY GUARD: Role-Based Access Control 🚨
         auth.onAuthStateChanged(user => {
             if (!user) {
-                // Not logged in? Kick to login screen.
                 window.location.replace("login.html");
             } else {
-                // Logged in! Now check if they are an ADMIN in the database.
                 db.collection("users").doc(user.uid).get().then(doc => {
                     if (doc.exists && doc.data().role === "admin") {
-                        // VIP CONFIRMED: Let them see the dashboard data
                         fetchUsers(); 
                     } else {
-                        // INTRUDER: Regular user trying to access admin panel. Kick to main page.
                         alert("Access Denied: Administrator privileges required.");
                         window.location.replace("index.html");
                     }
@@ -91,11 +86,11 @@
             }
         });
 
-        // Fetch Users from Firestore Database
+        // Fetch Users
         function fetchUsers() {
             db.collection("users").get().then((querySnapshot) => {
                 const tbody = document.getElementById('user-table-body');
-                tbody.innerHTML = ''; // Clear loading text
+                tbody.innerHTML = ''; 
                 
                 if(querySnapshot.empty) {
                     tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No users found.</td></tr>';
@@ -118,7 +113,7 @@
             });
         }
 
-        // Logout Logic
+        // Logout
         document.getElementById('logout-btn').addEventListener('click', () => {
             auth.signOut().then(() => window.location.replace("login.html"));
         });
