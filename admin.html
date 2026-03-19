@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAR | Admin Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <style>
+        :root { --bg-deep: #121814; --liquid-emerald: #14805c; --liquid-gold: #e3be75; --glass-bg: rgba(30, 45, 38, 0.45); }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-deep); color: #fff; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; }
+        
+        .header { width: 100%; max-width: 1000px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(227, 190, 117, 0.2); padding-bottom: 20px; margin-bottom: 40px; }
+        .header h1 { font-family: 'Cormorant Garamond', serif; color: var(--liquid-gold); margin: 0; text-transform: uppercase; font-size: 2rem; }
+        .logout-btn { background: transparent; border: 1px solid var(--liquid-gold); color: var(--liquid-gold); padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: all 0.3s; font-family: 'Montserrat'; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .logout-btn:hover { background: var(--liquid-gold); color: var(--bg-deep); }
+
+        .dashboard-card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 30px; width: 100%; max-width: 1000px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        h3 { color: var(--liquid-gold); margin-top: 0; letter-spacing: 2px; text-transform: uppercase; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: var(--liquid-emerald); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; }
+        td { font-weight: 300; font-size: 0.9rem; }
+        .role-badge { background: rgba(227, 190, 117, 0.1); color: var(--liquid-gold); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; border: 1px solid var(--liquid-gold); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Command Center</h1>
+        <button class="logout-btn" id="logout-btn">Log Out</button>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>Registered Users Network</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Email Address</th>
+                    <th>Role</th>
+                    <th>User ID</th>
+                </tr>
+            </thead>
+            <tbody id="user-table-body">
+                <tr><td colspan="3" style="text-align: center; color: gray;">Loading network data...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Your Exact Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtMiaiLqdLZy_K9pqy1mpgGFzIXbX7IEE",
+            authDomain: "eduar-7425d.firebaseapp.com",
+            projectId: "eduar-7425d",
+            storageBucket: "eduar-7425d.firebasestorage.app",
+            messagingSenderId: "316275134268",
+            appId: "1:316275134268:web:93223c518bca38f73f9839",
+            measurementId: "G-M19NLQVK21"
+        };
+
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ROUTE GUARD: Kick out unauthenticated users
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.replace("login.html");
+            } else {
+                fetchUsers(); // Only fetch data if logged in
+            }
+        });
+
+        // Fetch Users from Firestore Database
+        function fetchUsers() {
+            db.collection("users").get().then((querySnapshot) => {
+                const tbody = document.getElementById('user-table-body');
+                tbody.innerHTML = ''; // Clear loading text
+                
+                if(querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">No users found.</td></tr>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${user.email}</td>
+                        <td><span class="role-badge">${user.role || 'user'}</span></td>
+                        <td style="font-family: monospace; color: gray;">${doc.id}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }).catch(error => {
+                console.error("Error fetching users: ", error);
+                document.getElementById('user-table-body').innerHTML = `<tr><td colspan="3" style="color: red;">Error loading data. Make sure Firestore is in Test Mode.</td></tr>`;
+            });
+        }
+
+        // Logout Logic
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            auth.signOut().then(() => window.location.replace("login.html"));
+        });
+    </script>
+</body>
+</html>
