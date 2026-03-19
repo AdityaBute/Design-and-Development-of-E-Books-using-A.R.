@@ -43,14 +43,12 @@
         .btn:hover { color: var(--bg-deep); box-shadow: 0 10px 20px rgba(227, 190, 117, 0.3); }
         .btn:hover::before { transform: scaleX(1); }
 
-        .toggle-text { margin-top: 20px; font-size: 0.85rem; color: rgba(255,255,255,0.6); cursor: pointer; }
+        .toggle-text { margin-top: 20px; font-size: 0.85rem; color: rgba(255,255,255,0.6); cursor: pointer; transition: color 0.3s; }
         .toggle-text:hover { color: var(--liquid-gold); }
-        .error-msg { color: #ff4d4d; font-size: 0.85rem; margin-top: 15px; min-height: 15px; }
-        .back-link { position: absolute; top: 30px; left: 30px; color: var(--liquid-gold); text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; z-index: 100; }
+        .error-msg { color: #ff4d4d; font-size: 0.85rem; margin-top: 15px; min-height: 15px; font-weight: 500;}
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-link">← Back to Portal</a>
     <div class="ambient-bg"><div class="liquid-blob blob-1"></div><div class="liquid-blob blob-2"></div></div>
 
     <div class="login-card tilt-card" id="card-container">
@@ -58,16 +56,17 @@
         <h2 id="title-main">Portal Login</h2>
         
         <form id="auth-form">
-            <div class="input-group"><label>Email Address</label><input type="email" id="email" required placeholder="admin@eduar.com"></div>
-            <div class="input-group"><label>Password</label><input type="password" id="password" required placeholder="••••••••"></div>
+            <div class="input-group"><label>Email Address</label><input type="email" id="email" required placeholder="user@eduar.com"></div>
+            <div class="input-group" id="pass-group"><label>Password</label><input type="password" id="password" required placeholder="••••••••"></div>
             <button type="submit" class="btn" id="submit-btn">Login</button>
             <div class="error-msg" id="error-msg"></div>
         </form>
+        
+        <div class="toggle-text" id="forgot-pass" style="margin-top: 15px;">Forgot Password?</div>
         <div class="toggle-text" id="toggle-mode">Don't have an account? <strong>Register here</strong></div>
     </div>
 
     <script>
-        // Your Exact Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBtMiaiLqdLZy_K9pqy1mpgGFzIXbX7IEE",
             authDomain: "eduar-7425d.firebaseapp.com",
@@ -82,9 +81,14 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Redirect if already logged in
+        auth.onAuthStateChanged(user => {
+            if (user) { window.location.replace("index.html"); }
+        });
+
         // UI Logic
         let isLogin = true;
-        const form = document.getElementById('auth-form'), titleCursive = document.getElementById('title-cursive'), titleMain = document.getElementById('title-main'), submitBtn = document.getElementById('submit-btn'), toggleMode = document.getElementById('toggle-mode'), errorMsg = document.getElementById('error-msg');
+        const form = document.getElementById('auth-form'), titleCursive = document.getElementById('title-cursive'), titleMain = document.getElementById('title-main'), submitBtn = document.getElementById('submit-btn'), toggleMode = document.getElementById('toggle-mode'), errorMsg = document.getElementById('error-msg'), forgotPass = document.getElementById('forgot-pass');
 
         toggleMode.addEventListener('click', () => {
             isLogin = !isLogin; errorMsg.innerText = "";
@@ -92,20 +96,38 @@
             titleMain.innerText = isLogin ? "Portal Login" : "Register Account";
             submitBtn.innerText = isLogin ? "Login" : "Create Account";
             toggleMode.innerHTML = isLogin ? "Don't have an account? <strong>Register here</strong>" : "Already registered? <strong>Login here</strong>";
+            forgotPass.style.display = isLogin ? "block" : "none"; // Hide forgot pass on register screen
+        });
+
+        // Forgot Password Logic
+        forgotPass.addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            if(!email) {
+                errorMsg.style.color = "#ff4d4d";
+                errorMsg.innerText = "Please enter your email above, then click 'Forgot Password' again.";
+                return;
+            }
+            auth.sendPasswordResetEmail(email).then(() => {
+                errorMsg.style.color = "var(--liquid-emerald)";
+                errorMsg.innerText = "Reset link sent! Check your email inbox.";
+            }).catch(err => {
+                errorMsg.style.color = "#ff4d4d";
+                errorMsg.innerText = err.message;
+            });
         });
 
         // Auth Logic
         form.addEventListener('submit', (e) => {
-            e.preventDefault(); submitBtn.innerText = "Processing..."; errorMsg.innerText = "";
+            e.preventDefault(); submitBtn.innerText = "Processing..."; errorMsg.innerText = ""; errorMsg.style.color = "#ff4d4d";
             const email = document.getElementById('email').value, pass = document.getElementById('password').value;
 
             if (isLogin) {
-                auth.signInWithEmailAndPassword(email, pass).then(() => window.location.href = "admin.html")
+                auth.signInWithEmailAndPassword(email, pass).then(() => window.location.href = "index.html")
                 .catch(err => { errorMsg.innerText = err.message; submitBtn.innerText = "Login"; });
             } else {
                 auth.createUserWithEmailAndPassword(email, pass).then(cred => {
                     return db.collection("users").doc(cred.user.uid).set({ email: email, role: "user", joined: firebase.firestore.FieldValue.serverTimestamp() });
-                }).then(() => window.location.href = "admin.html")
+                }).then(() => window.location.href = "index.html")
                 .catch(err => { errorMsg.innerText = err.message; submitBtn.innerText = "Create Account"; });
             }
         });
