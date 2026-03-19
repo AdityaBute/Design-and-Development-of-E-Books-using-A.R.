@@ -485,19 +485,22 @@
         <p>Department of CSE</p>
     </footer>
 
-    <script>
-        // LOGOUT LOGIC
-        document.getElementById('nav-logout').addEventListener('click', () => {
-            auth.signOut().then(() => {
-                window.location.replace("login.html");
-            });
-        });
-
+<script>
         let isTransitioning = false;
 
         function switchPage(pageId) {
+            // ALWAYS close the mobile menu on click, no matter what
+            const navLinks = document.getElementById('nav-links');
+            const menuIcon = document.getElementById('menu-icon');
+            if (navLinks.classList.contains('show')) {
+                navLinks.classList.remove('show');
+                menuIcon.style.transform = 'rotate(0deg)';
+            }
+
             if (isTransitioning) return;
             const activePage = document.querySelector('.page-section.active');
+            
+            // If they clicked the page they are already on, just stop here (menu is already closed)
             if (activePage && activePage.id === pageId) return; 
             
             isTransitioning = true;
@@ -510,17 +513,9 @@
                 if(targetNav) targetNav.classList.add('active');
             }
 
-            const navLinks = document.getElementById('nav-links');
-            const menuIcon = document.getElementById('menu-icon');
-            if (navLinks.classList.contains('show')) {
-                navLinks.classList.remove('show');
-                menuIcon.style.transform = 'rotate(0deg)';
-            }
-
             if (activePage) {
                 activePage.style.opacity = '0';
                 activePage.style.transform = 'translateY(30px)';
-                
                 setTimeout(() => {
                     activePage.classList.remove('active');
                     activePage.style.opacity = ''; 
@@ -536,118 +531,85 @@
             const newPage = document.getElementById(pageId);
             window.scrollTo({ top: 0, behavior: 'instant' });
             newPage.classList.add('active');
-            
-            setTimeout(() => {
-                triggerReveals();
-                isTransitioning = false;
-            }, 50);
+            setTimeout(() => { triggerReveals(); isTransitioning = false; }, 50);
         }
 
         function toggleMenu() {
             const navLinks = document.getElementById('nav-links');
             const menuIcon = document.getElementById('menu-icon');
             navLinks.classList.toggle('show');
-            
-            if (navLinks.classList.contains('show')) {
-                menuIcon.style.transform = 'rotate(90deg)';
-            } else {
-                menuIcon.style.transform = 'rotate(0deg)';
-            }
+            menuIcon.style.transform = navLinks.classList.contains('show') ? 'rotate(90deg)' : 'rotate(0deg)';
         }
 
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+            nav.classList.toggle('scrolled', window.scrollY > 50);
         });
 
         function triggerReveals() {
             const reveals = document.querySelectorAll('.page-section.active .reveal');
             const windowHeight = window.innerHeight;
-            
             reveals.forEach((el) => {
-                const elementTop = el.getBoundingClientRect().top;
-                if (elementTop < windowHeight - 50) {
-                    el.classList.add('active');
-                }
+                if (el.getBoundingClientRect().top < windowHeight - 50) el.classList.add('active');
             });
         }
         window.addEventListener('scroll', triggerReveals);
         window.addEventListener('load', triggerReveals);
 
-        // --- 3D JIGGLE TILT PHYSICS ---
+        // 3D Tilt Logic
         const tiltCards = document.querySelectorAll('.tilt-card');
-        
         if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
             tiltCards.forEach(card => {
                 card.addEventListener('mousemove', e => {
                     const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    
-                    const rotateX = ((y - centerY) / centerY) * -5; 
-                    const rotateY = ((x - centerX) / centerX) * 5;
-                    
+                    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+                    const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -5; 
+                    const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 5;
                     card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
                 });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                });
+                card.addEventListener('mouseleave', () => card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`);
             });
-        } 
-        else {
+        } else {
             if (window.DeviceOrientationEvent) {
                 window.addEventListener('deviceorientation', (e) => {
                     if (e.beta === null || e.gamma === null) return;
-                    
-                    let xTilt = Math.max(-15, Math.min(15, e.beta - 45)); 
-                    let yTilt = Math.max(-15, Math.min(15, e.gamma));
-                    
-                    const rotateX = xTilt * -0.5; 
-                    const rotateY = yTilt * 0.5;
-
+                    let xTilt = Math.max(-15, Math.min(15, e.beta - 45)), yTilt = Math.max(-15, Math.min(15, e.gamma));
                     tiltCards.forEach(card => {
                         const rect = card.getBoundingClientRect();
                         if (rect.top < window.innerHeight && rect.bottom > 0) {
-                            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
+                            card.style.transform = `perspective(1000px) rotateX(${xTilt * -0.5}deg) rotateY(${yTilt * 0.5}deg) scale3d(1, 1, 1)`;
                             card.style.transition = `transform 0.1s ease-out`;
                         }
                     });
                 });
             }
-
             let gyroGranted = false;
             document.body.addEventListener('click', () => {
                 if (!gyroGranted && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                    DeviceOrientationEvent.requestPermission()
-                        .then(permissionState => {
-                            if (permissionState === 'granted') gyroGranted = true;
-                        })
-                        .catch(console.error);
+                    DeviceOrientationEvent.requestPermission().then(state => { if (state === 'granted') gyroGranted = true; }).catch(console.error);
                 }
             }, { once: true });
         }
 
         const launchBtn = document.getElementById('mobile-launch-btn');
-        const desktopAlert = document.getElementById('desktop-alert');
-
         if(launchBtn) {
             launchBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                
-                if (isMobile) {
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                     window.open("https://adityabute.github.io/WebAR/", "_blank");
                 } else {
+                    const desktopAlert = document.getElementById('desktop-alert');
                     desktopAlert.classList.add('show');
-                    setTimeout(() => { desktopAlert.classList.remove('show'); }, 4000);
+                    setTimeout(() => desktopAlert.classList.remove('show'), 4000);
                 }
+            });
+        }
+
+        // LOGOUT LOGIC
+        const logoutBtn = document.getElementById('nav-logout');
+        if(logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                auth.signOut().then(() => window.location.replace("login.html"));
             });
         }
     </script>
