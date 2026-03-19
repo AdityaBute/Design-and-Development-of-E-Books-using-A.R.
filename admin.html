@@ -68,12 +68,26 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // ROUTE GUARD: Kick out unauthenticated users
+        // 🚨 UPGRADED SECURITY GUARD: Role-Based Access Control 🚨
         auth.onAuthStateChanged(user => {
             if (!user) {
+                // Not logged in? Kick to login screen.
                 window.location.replace("login.html");
             } else {
-                fetchUsers(); // Only fetch data if logged in
+                // Logged in! Now check if they are an ADMIN in the database.
+                db.collection("users").doc(user.uid).get().then(doc => {
+                    if (doc.exists && doc.data().role === "admin") {
+                        // VIP CONFIRMED: Let them see the dashboard data
+                        fetchUsers(); 
+                    } else {
+                        // INTRUDER: Regular user trying to access admin panel. Kick to main page.
+                        alert("Access Denied: Administrator privileges required.");
+                        window.location.replace("index.html");
+                    }
+                }).catch(error => {
+                    console.error("Error checking role:", error);
+                    window.location.replace("index.html");
+                });
             }
         });
 
