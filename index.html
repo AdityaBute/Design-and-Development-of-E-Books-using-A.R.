@@ -11,6 +11,7 @@
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBtMiaIlQdLzY_K9pqy1mpgGFzIXbX7IEE",
@@ -23,10 +24,23 @@
         };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const auth = firebase.auth();
+        const db = firebase.firestore();
         
-        // KICK OUT UNAUTHENTICATED USERS INSTANTLY
+        // UPGRADED SMART BOUNCER
         auth.onAuthStateChanged(user => {
-            if (!user) { window.location.replace("login.html"); }
+            if (!user) { 
+                window.location.replace("login.html"); 
+            } else {
+                // 1. User is verified! Fade the website in safely.
+                document.body.style.opacity = "1";
+                
+                // 2. Check if they are an Admin to reveal the secret button
+                db.collection("users").doc(user.uid).get().then(doc => {
+                    if (doc.exists && doc.data().role === "admin") {
+                        document.getElementById('nav-admin-link').style.display = "block";
+                    }
+                });
+            }
         });
     </script>
 
@@ -297,7 +311,7 @@
         }
     </style>
 </head>
-<body>
+<body style="opacity: 0; transition: opacity 0.5s ease;">
 
     <div class="ambient-bg">
         <div class="liquid-blob blob-1"></div>
@@ -313,7 +327,9 @@
             <li class="nav-item" onclick="switchPage('about')">About</li>
             <li class="nav-item" onclick="switchPage('simulations')">Simulations</li>
             <li class="nav-item" onclick="switchPage('contact')">Contact</li>
-            <li class="nav-item" onclick="window.location.href='admin.html'">Admin Panel</li>
+            
+            <li class="nav-item" id="nav-admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</li>
+            
             <li class="nav-item" id="nav-logout">Logout</li>
         </ul>
     </nav>
@@ -485,7 +501,7 @@
         <p>Department of CSE</p>
     </footer>
 
-<script>
+    <script>
         let isTransitioning = false;
 
         function switchPage(pageId) {
@@ -500,7 +516,7 @@
             if (isTransitioning) return;
             const activePage = document.querySelector('.page-section.active');
             
-            // If they clicked the page they are already on, just stop here (menu is already closed)
+            // If they clicked the page they are already on, just stop here
             if (activePage && activePage.id === pageId) return; 
             
             isTransitioning = true;
@@ -556,7 +572,7 @@
         window.addEventListener('scroll', triggerReveals);
         window.addEventListener('load', triggerReveals);
 
-        // 3D Tilt Logic
+        // --- FIXED 3D TILT LOGIC ---
         const tiltCards = document.querySelectorAll('.tilt-card');
         if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
             tiltCards.forEach(card => {
@@ -573,12 +589,19 @@
             if (window.DeviceOrientationEvent) {
                 window.addEventListener('deviceorientation', (e) => {
                     if (e.beta === null || e.gamma === null) return;
-                    let xTilt = Math.max(-15, Math.min(15, e.beta - 45)), yTilt = Math.max(-15, Math.min(15, e.gamma));
+                    
+                    // FIXED: Restricted max rotation angles and drastically lowered the sensitivity multiplier (0.15 instead of 0.5)
+                    let xTilt = Math.max(-10, Math.min(10, e.beta - 45)); 
+                    let yTilt = Math.max(-10, Math.min(10, e.gamma));
+                    const rotateX = xTilt * -0.15; 
+                    const rotateY = yTilt * 0.15;
+
                     tiltCards.forEach(card => {
                         const rect = card.getBoundingClientRect();
                         if (rect.top < window.innerHeight && rect.bottom > 0) {
-                            card.style.transform = `perspective(1000px) rotateX(${xTilt * -0.5}deg) rotateY(${yTilt * 0.5}deg) scale3d(1, 1, 1)`;
-                            card.style.transition = `transform 0.1s ease-out`;
+                            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
+                            // Added an ease-out transition for buttery smooth floating instead of jittery shaking
+                            card.style.transition = `transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)`; 
                         }
                     });
                 });
