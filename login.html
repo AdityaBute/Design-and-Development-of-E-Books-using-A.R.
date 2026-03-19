@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAR | Secure Portal Login</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <style>
+        :root {
+            --bg-deep: #121814; --liquid-emerald: #14805c; --liquid-gold: #e3be75; 
+            --glass-bg: rgba(30, 45, 38, 0.45); --glass-border: rgba(227, 190, 117, 0.25); 
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-deep); color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        
+        .ambient-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -3; }
+        .liquid-blob { position: absolute; filter: blur(100px); opacity: 0.6; border-radius: 50%; mix-blend-mode: screen; }
+        .blob-1 { width: 50vw; height: 50vw; background: var(--liquid-emerald); top: -10%; left: -10%; }
+        .blob-2 { width: 40vw; height: 40vw; background: var(--liquid-gold); bottom: -10%; right: -10%; }
+
+        .tilt-card { transform-style: preserve-3d; transition: transform 0.2s ease-out; }
+        .login-card { background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-top: 1px solid rgba(255,255,255,0.2); border-radius: 24px; padding: 50px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 10; }
+        .login-card > * { transform: translateZ(30px); }
+
+        .cursive-accent { font-family: 'Pinyon Script', cursive; font-size: 3.5rem; color: var(--liquid-gold); margin-bottom: -10px; text-shadow: 0 5px 20px rgba(227, 190, 117, 0.4); }
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px; }
+        
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--liquid-gold); margin-bottom: 8px; }
+        .input-group input { width: 100%; padding: 15px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: 'Montserrat', sans-serif; outline: none; transition: border-color 0.3s; }
+        .input-group input:focus { border-color: var(--liquid-gold); }
+
+        .btn { width: 100%; padding: 18px; margin-top: 10px; background: transparent; border: 1px solid var(--liquid-gold); color: var(--liquid-gold); border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+        .btn::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--liquid-gold); z-index: -1; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+        .btn:hover { color: var(--bg-deep); box-shadow: 0 10px 20px rgba(227, 190, 117, 0.3); }
+        .btn:hover::before { transform: scaleX(1); }
+
+        .toggle-text { margin-top: 20px; font-size: 0.85rem; color: rgba(255,255,255,0.6); cursor: pointer; }
+        .toggle-text:hover { color: var(--liquid-gold); }
+        .error-msg { color: #ff4d4d; font-size: 0.85rem; margin-top: 15px; min-height: 15px; }
+        .back-link { position: absolute; top: 30px; left: 30px; color: var(--liquid-gold); text-decoration: none; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; z-index: 100; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Portal</a>
+    <div class="ambient-bg"><div class="liquid-blob blob-1"></div><div class="liquid-blob blob-2"></div></div>
+
+    <div class="login-card tilt-card" id="card-container">
+        <div class="cursive-accent" id="title-cursive">Secure Access</div>
+        <h2 id="title-main">Portal Login</h2>
+        
+        <form id="auth-form">
+            <div class="input-group"><label>Email Address</label><input type="email" id="email" required placeholder="admin@eduar.com"></div>
+            <div class="input-group"><label>Password</label><input type="password" id="password" required placeholder="••••••••"></div>
+            <button type="submit" class="btn" id="submit-btn">Login</button>
+            <div class="error-msg" id="error-msg"></div>
+        </form>
+        <div class="toggle-text" id="toggle-mode">Don't have an account? <strong>Register here</strong></div>
+    </div>
+
+    <script>
+        // Your Exact Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtMiaiLqdLZy_K9pqy1mpgGFzIXbX7IEE",
+            authDomain: "eduar-7425d.firebaseapp.com",
+            projectId: "eduar-7425d",
+            storageBucket: "eduar-7425d.firebasestorage.app",
+            messagingSenderId: "316275134268",
+            appId: "1:316275134268:web:93223c518bca38f73f9839",
+            measurementId: "G-M19NLQVK21"
+        };
+
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // UI Logic
+        let isLogin = true;
+        const form = document.getElementById('auth-form'), titleCursive = document.getElementById('title-cursive'), titleMain = document.getElementById('title-main'), submitBtn = document.getElementById('submit-btn'), toggleMode = document.getElementById('toggle-mode'), errorMsg = document.getElementById('error-msg');
+
+        toggleMode.addEventListener('click', () => {
+            isLogin = !isLogin; errorMsg.innerText = "";
+            titleCursive.innerText = isLogin ? "Secure Access" : "Join Network";
+            titleMain.innerText = isLogin ? "Portal Login" : "Register Account";
+            submitBtn.innerText = isLogin ? "Login" : "Create Account";
+            toggleMode.innerHTML = isLogin ? "Don't have an account? <strong>Register here</strong>" : "Already registered? <strong>Login here</strong>";
+        });
+
+        // Auth Logic
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); submitBtn.innerText = "Processing..."; errorMsg.innerText = "";
+            const email = document.getElementById('email').value, pass = document.getElementById('password').value;
+
+            if (isLogin) {
+                auth.signInWithEmailAndPassword(email, pass).then(() => window.location.href = "admin.html")
+                .catch(err => { errorMsg.innerText = err.message; submitBtn.innerText = "Login"; });
+            } else {
+                auth.createUserWithEmailAndPassword(email, pass).then(cred => {
+                    return db.collection("users").doc(cred.user.uid).set({ email: email, role: "user", joined: firebase.firestore.FieldValue.serverTimestamp() });
+                }).then(() => window.location.href = "admin.html")
+                .catch(err => { errorMsg.innerText = err.message; submitBtn.innerText = "Create Account"; });
+            }
+        });
+
+        // 3D Tilt
+        const card = document.getElementById('card-container');
+        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            document.body.addEventListener('mousemove', e => {
+                const x = e.clientX / window.innerWidth - 0.5, y = e.clientY / window.innerHeight - 0.5;
+                card.style.transform = `perspective(1000px) rotateX(${y * -10}deg) rotateY(${x * 10}deg)`;
+            });
+        }
+    </script>
+</body>
+</html>
