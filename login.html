@@ -4,66 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduAR | Secure Portal Login</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
-
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
     <style>
-        :root {
-            --bg-deep: #121814; --liquid-emerald: #14805c; --liquid-gold: #e3be75; 
-            --glass-bg: rgba(30, 45, 38, 0.45); --glass-border: rgba(227, 190, 117, 0.25); 
-        }
+        :root { --bg-deep: #121814; --liquid-emerald: #14805c; --liquid-gold: #e3be75; --glass-bg: rgba(30, 45, 38, 0.45); }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: var(--bg-deep); color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        
         .ambient-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -3; }
         .liquid-blob { position: absolute; filter: blur(100px); opacity: 0.6; border-radius: 50%; mix-blend-mode: screen; }
         .blob-1 { width: 50vw; height: 50vw; background: var(--liquid-emerald); top: -10%; left: -10%; }
         .blob-2 { width: 40vw; height: 40vw; background: var(--liquid-gold); bottom: -10%; right: -10%; }
-
-        .tilt-card { transform-style: preserve-3d; transition: transform 0.2s ease-out; }
-        .login-card { background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-top: 1px solid rgba(255,255,255,0.2); border-radius: 24px; padding: 50px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 10; }
-        .login-card > * { transform: translateZ(30px); }
-
-        .cursive-accent { font-family: 'Pinyon Script', cursive; font-size: 3.5rem; color: var(--liquid-gold); margin-bottom: -10px; text-shadow: 0 5px 20px rgba(227, 190, 117, 0.4); }
+        .login-card { background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid rgba(227, 190, 117, 0.25); border-radius: 24px; padding: 50px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 10; }
+        .cursive-accent { font-family: 'Pinyon Script', cursive; font-size: 3.5rem; color: var(--liquid-gold); margin-bottom: -10px; }
         h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 1px; }
-        
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { display: block; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--liquid-gold); margin-bottom: 8px; }
-        
-        /* PASSWORD TOGGLE STYLING */
         .password-container { position: relative; width: 100%; }
         .input-group input { width: 100%; padding: 15px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: 'Montserrat', sans-serif; outline: none; transition: border-color 0.3s; }
         .input-group input:focus { border-color: var(--liquid-gold); }
-        #password { padding-right: 45px; } /* Room for the eye icon */
-        .toggle-eye { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.6; transition: opacity 0.3s; font-size: 1.2rem; user-select: none; }
-        .toggle-eye:hover { opacity: 1; }
-
-        .btn { width: 100%; padding: 18px; margin-top: 10px; background: transparent; border: 1px solid var(--liquid-gold); color: var(--liquid-gold); border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
-        .btn::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--liquid-gold); z-index: -1; transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
-        .btn:hover { color: var(--bg-deep); box-shadow: 0 10px 20px rgba(227, 190, 117, 0.3); }
-        .btn:hover::before { transform: scaleX(1); }
-
-        .toggle-text { margin-top: 20px; font-size: 0.85rem; color: rgba(255,255,255,0.6); cursor: pointer; transition: color 0.3s; }
-        .toggle-text:hover { color: var(--liquid-gold); }
-        .error-msg { color: #ff4d4d; font-size: 0.85rem; margin-top: 15px; min-height: 15px; font-weight: 500;}
+        #password { padding-right: 45px; } 
+        .toggle-eye { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.6; font-size: 1.2rem; user-select: none; }
+        .btn { width: 100%; padding: 18px; margin-top: 10px; background: transparent; border: 1px solid var(--liquid-gold); color: var(--liquid-gold); border-radius: 50px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+        .btn:hover { background: var(--liquid-gold); color: var(--bg-deep); }
+        .toggle-text { margin-top: 20px; font-size: 0.85rem; color: rgba(255,255,255,0.6); cursor: pointer; }
+        .error-msg { color: #ff4d4d; font-size: 0.85rem; margin-top: 15px; min-height: 15px; font-weight: 500; word-wrap: break-word;}
     </style>
 </head>
 <body>
     <div class="ambient-bg"><div class="liquid-blob blob-1"></div><div class="liquid-blob blob-2"></div></div>
-
-    <div class="login-card tilt-card" id="card-container">
+    <div class="login-card" id="card-container">
         <div class="cursive-accent" id="title-cursive">Secure Access</div>
         <h2 id="title-main">Portal Login</h2>
-        
         <form id="auth-form">
             <div class="input-group"><label>Email Address</label><input type="email" id="email" required placeholder="user@eduar.com"></div>
-            
             <div class="input-group" id="pass-group">
                 <label>Password</label>
                 <div class="password-container">
@@ -71,45 +46,29 @@
                     <span class="toggle-eye" id="toggle-eye">👁️</span>
                 </div>
             </div>
-
             <button type="submit" class="btn" id="submit-btn">Login</button>
             <div class="error-msg" id="error-msg"></div>
         </form>
-        
         <div class="toggle-text" id="forgot-pass" style="margin-top: 15px;">Forgot Password?</div>
         <div class="toggle-text" id="toggle-mode">Don't have an account? <strong>Register here</strong></div>
     </div>
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyBtMiaIlQdLzY_K9pqy1mpgGFzIXbX7IEE",
-            authDomain: "eduar-7425d.firebaseapp.com",
-            projectId: "eduar-7425d",
-            storageBucket: "eduar-7425d.firebasestorage.app",
-            messagingSenderId: "316275134268",
-            appId: "1:316275134268:web:93223c518bca38f73f9839",
-            measurementId: "G-M19NLQVK21"
+            apiKey: "AIzaSyBtMiaIlQdLzY_K9pqy1mpgGFzIXbX7IEE", authDomain: "eduar-7425d.firebaseapp.com", projectId: "eduar-7425d", storageBucket: "eduar-7425d.firebasestorage.app", messagingSenderId: "316275134268", appId: "1:316275134268:web:93223c518bca38f73f9839"
         };
-
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Redirect if already logged in
-        auth.onAuthStateChanged(user => {
-            if (user) { window.location.replace("index.html"); }
-        });
+        auth.onAuthStateChanged(user => { if (user) window.location.replace("index.html"); });
 
-        // Toggle Password Visibility
-        const toggleEye = document.getElementById('toggle-eye');
-        const passwordInput = document.getElementById('password');
+        const toggleEye = document.getElementById('toggle-eye'), passwordInput = document.getElementById('password');
         toggleEye.addEventListener('click', () => {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            toggleEye.innerText = type === 'password' ? '👁️' : '🙈';
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type; toggleEye.innerText = type === 'password' ? '👁️' : '🙈';
         });
 
-        // UI Logic
         let isLogin = true;
         const form = document.getElementById('auth-form'), titleCursive = document.getElementById('title-cursive'), titleMain = document.getElementById('title-main'), submitBtn = document.getElementById('submit-btn'), toggleMode = document.getElementById('toggle-mode'), errorMsg = document.getElementById('error-msg'), forgotPass = document.getElementById('forgot-pass');
 
@@ -122,47 +81,33 @@
             forgotPass.style.display = isLogin ? "block" : "none";
         });
 
-        // Forgot Password Logic
         forgotPass.addEventListener('click', () => {
             const email = document.getElementById('email').value;
-            if(!email) {
-                errorMsg.style.color = "#ff4d4d";
-                errorMsg.innerText = "Please enter your email above, then click 'Forgot Password' again.";
-                return;
-            }
-            auth.sendPasswordResetEmail(email).then(() => {
-                errorMsg.style.color = "var(--liquid-emerald)";
-                errorMsg.innerText = "Reset link sent! Check your email inbox.";
-            }).catch(err => {
-                errorMsg.style.color = "#ff4d4d";
-                errorMsg.innerText = err.message;
-            });
+            if(!email) return errorMsg.innerText = "Please enter your email above, then click 'Forgot Password' again.";
+            auth.sendPasswordResetEmail(email).then(() => { errorMsg.style.color = "var(--liquid-emerald)"; errorMsg.innerText = "Reset link sent! Check your email inbox."; }).catch(err => { errorMsg.style.color = "#ff4d4d"; errorMsg.innerText = err.message; });
         });
 
-        // Auth Logic
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault(); submitBtn.innerText = "Processing..."; errorMsg.innerText = ""; errorMsg.style.color = "#ff4d4d";
             const email = document.getElementById('email').value, pass = document.getElementById('password').value;
 
-            if (isLogin) {
-                auth.signInWithEmailAndPassword(email, pass).then(() => window.location.href = "index.html")
-                .catch(err => { errorMsg.innerText = err.message; submitBtn.innerText = "Login"; });
-            } else {
-                auth.createUserWithEmailAndPassword(email, pass).then(cred => {
-                    return db.collection("users").doc(cred.user.uid).set({ email: email, role: "user", joined: firebase.firestore.FieldValue.serverTimestamp() });
-                }).then(() => window.location.href = "index.html")
-                .catch(err => { errorMsg.innerText = err.message; submitBtn.innerText = "Create Account"; });
+            try {
+                if (isLogin) {
+                    await auth.signInWithEmailAndPassword(email, pass);
+                    window.location.href = "index.html";
+                } else {
+                    const cred = await auth.createUserWithEmailAndPassword(email, pass);
+                    // BULLETPROOF DATABASE SAVE: If this fails, it throws an error and STOPS.
+                    await db.collection("users").doc(cred.user.uid).set({
+                        email: email, role: "user", joined: new Date().toISOString()
+                    });
+                    window.location.href = "index.html";
+                }
+            } catch (err) {
+                errorMsg.innerText = "Error: " + err.message;
+                submitBtn.innerText = isLogin ? "Login" : "Create Account";
             }
         });
-
-        // 3D Tilt
-        const card = document.getElementById('card-container');
-        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-            document.body.addEventListener('mousemove', e => {
-                const x = e.clientX / window.innerWidth - 0.5, y = e.clientY / window.innerHeight - 0.5;
-                card.style.transform = `perspective(1000px) rotateX(${y * -10}deg) rotateY(${x * 10}deg)`;
-            });
-        }
     </script>
 </body>
 </html>
