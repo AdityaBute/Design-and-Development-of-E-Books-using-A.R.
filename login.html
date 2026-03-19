@@ -53,24 +53,47 @@
         <div class="toggle-text" id="toggle-mode">Don't have an account? <strong>Register here</strong></div>
     </div>
 
-    <script>
+<script>
         const firebaseConfig = {
-            apiKey: "AIzaSyBtMiaIlQdLzY_K9pqy1mpgGFzIXbX7IEE", authDomain: "eduar-7425d.firebaseapp.com", projectId: "eduar-7425d", storageBucket: "eduar-7425d.firebasestorage.app", messagingSenderId: "316275134268", appId: "1:316275134268:web:93223c518bca38f73f9839"
+            apiKey: "AIzaSyBtMiaIlQdLzY_K9pqy1mpgGFzIXbX7IEE", 
+            authDomain: "eduar-7425d.firebaseapp.com", 
+            projectId: "eduar-7425d", 
+            storageBucket: "eduar-7425d.firebasestorage.app", 
+            messagingSenderId: "316275134268", 
+            appId: "1:316275134268:web:93223c518bca38f73f9839"
         };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        auth.onAuthStateChanged(user => { if (user) window.location.replace("index.html"); });
+        // THE FIX: This flag stops the page from redirecting too fast!
+        let isProcessing = false;
 
-        const toggleEye = document.getElementById('toggle-eye'), passwordInput = document.getElementById('password');
-        toggleEye.addEventListener('click', () => {
-            const type = passwordInput.type === 'password' ? 'text' : 'password';
-            passwordInput.type = type; toggleEye.innerText = type === 'password' ? '👁️' : '🙈';
+        // The Bouncer: Only redirect if they aren't actively registering
+        auth.onAuthStateChanged(user => { 
+            if (user && !isProcessing) {
+                window.location.replace("index.html"); 
+            }
         });
 
+        // Eye Toggle Logic
+        const toggleEye = document.getElementById('toggle-eye');
+        const passwordInput = document.getElementById('password');
+        toggleEye.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type; 
+            toggleEye.innerText = type === 'password' ? '👁️' : '🙈';
+        });
+
+        // UI Logic
         let isLogin = true;
-        const form = document.getElementById('auth-form'), titleCursive = document.getElementById('title-cursive'), titleMain = document.getElementById('title-main'), submitBtn = document.getElementById('submit-btn'), toggleMode = document.getElementById('toggle-mode'), errorMsg = document.getElementById('error-msg'), forgotPass = document.getElementById('forgot-pass');
+        const form = document.getElementById('auth-form'), 
+              titleCursive = document.getElementById('title-cursive'), 
+              titleMain = document.getElementById('title-main'), 
+              submitBtn = document.getElementById('submit-btn'), 
+              toggleMode = document.getElementById('toggle-mode'), 
+              errorMsg = document.getElementById('error-msg'), 
+              forgotPass = document.getElementById('forgot-pass');
 
         toggleMode.addEventListener('click', () => {
             isLogin = !isLogin; errorMsg.innerText = "";
@@ -81,15 +104,31 @@
             forgotPass.style.display = isLogin ? "block" : "none";
         });
 
+        // Forgot Password Logic
         forgotPass.addEventListener('click', () => {
             const email = document.getElementById('email').value;
             if(!email) return errorMsg.innerText = "Please enter your email above, then click 'Forgot Password' again.";
-            auth.sendPasswordResetEmail(email).then(() => { errorMsg.style.color = "var(--liquid-emerald)"; errorMsg.innerText = "Reset link sent! Check your email inbox."; }).catch(err => { errorMsg.style.color = "#ff4d4d"; errorMsg.innerText = err.message; });
+            auth.sendPasswordResetEmail(email).then(() => { 
+                errorMsg.style.color = "var(--liquid-emerald)"; 
+                errorMsg.innerText = "Reset link sent! Check your email inbox."; 
+            }).catch(err => { 
+                errorMsg.style.color = "#ff4d4d"; 
+                errorMsg.innerText = err.message; 
+            });
         });
 
+        // Auth Logic
         form.addEventListener('submit', async (e) => {
-            e.preventDefault(); submitBtn.innerText = "Processing..."; errorMsg.innerText = ""; errorMsg.style.color = "#ff4d4d";
-            const email = document.getElementById('email').value, pass = document.getElementById('password').value;
+            e.preventDefault(); 
+            
+            isProcessing = true; // TURN ON THE STOP SIGN FOR THE BOUNCER
+            
+            submitBtn.innerText = "Processing..."; 
+            errorMsg.innerText = ""; 
+            errorMsg.style.color = "#ff4d4d";
+            
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
 
             try {
                 if (isLogin) {
@@ -97,13 +136,19 @@
                     window.location.href = "index.html";
                 } else {
                     const cred = await auth.createUserWithEmailAndPassword(email, pass);
-                    // BULLETPROOF DATABASE SAVE: If this fails, it throws an error and STOPS.
+                    
+                    // Wait for the database to safely save the data...
                     await db.collection("users").doc(cred.user.uid).set({
-                        email: email, role: "user", joined: new Date().toISOString()
+                        email: email, 
+                        role: "user", 
+                        joined: new Date().toISOString()
                     });
+                    
+                    // ...THEN redirect the user.
                     window.location.href = "index.html";
                 }
             } catch (err) {
+                isProcessing = false; // Turn off stop sign if it failed
                 errorMsg.innerText = "Error: " + err.message;
                 submitBtn.innerText = isLogin ? "Login" : "Create Account";
             }
